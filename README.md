@@ -1,8 +1,4 @@
-- git clone
-- git checkout -b your_name
-- modify README
-
-Nama:
+Nama: JUSTIN BANU PRABOWO
 
 # Server Setup
 - cd server
@@ -23,7 +19,7 @@ Fetch reviews for each restaurants
 - Save to DB for every get request
 - Sync new reviews
 
-# Responsive 
+# Responsive
 - Setup breakpoints
   - max width 600px
   - between 600px & 960px
