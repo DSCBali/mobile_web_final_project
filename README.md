@@ -11,6 +11,8 @@ Nama:
 - npm run start
 - keep the server running while developing
 
+Semua dokumentasi endpoints dari server bisa dilihat [di sini](https://github.com/DSCBali/mobile_web_final_project/blob/master/server/README.md)
+
 # Client Setup
 - cd client
 - serve
@@ -26,7 +28,7 @@ Fetch reviews for each restaurants:
 - Setup service worker (workbox optional)
 - Setup IndexedDb
 - Save to DB for every get request
-- Sync new reviews (sudah disiapkan contoh codenya silahkan dilihat di:)
+- Sync new reviews (sudah disiapkan contoh codenya silahkan dilihat [di sini](https://github.com/DSCBali/mobile_web_final_project/blob/master/client/service-worker.js))
 
 ### Responsive 
 - Setup breakpoints
