@@ -161,3 +161,41 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
+/**
+ * Submit a review
+ */
+
+const reviewForm = document.querySelector('#review-form');
+if (reviewForm) {
+  reviewForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const restaurant_id = getParameterByName('id'); 
+    const form = new FormData(event.target);
+    const data = {
+      id: 'needs_sync',
+      restaurant_id,
+      name: form.get('name'),
+      rating: form.get('rating'),
+      comments: form.get('comments'),
+    }
+
+    // clear values
+    event.target.reset();
+
+    // Tambahkan method post fetch reviews
+    /**
+     * panggil fillReviewsHTML setelah sukses post
+     * 
+     * di dalam catch callbacknya tambahkan data yg di atas ke dalam database
+     * masih di dalam catch tambahkan method seperti di bawah
+     * 
+     * navigator.serviceWorker.ready.then(function(swRegistration) {
+     *  return swRegistration.sync.register('syncReviews');
+     * });
+     */
+  });
+}
