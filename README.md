@@ -1,3 +1,5 @@
+Nama: Eksa Pramindanata
+
 - git clone
 - git checkout -b your_name
 - cd server
