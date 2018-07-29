@@ -1,3 +1,4 @@
+Nama : Nyoman Pradipta Dewantara
 - git clone
 - git checkout -b your_name
 - modify README dan isi nama kalian seperti di bawah
