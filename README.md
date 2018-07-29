@@ -21,3 +21,6 @@ Fetch reviews for each restaurants
   - min width 960px
 
 - Usage of img srcsets & picture tag (for webp support)
+
+
+Nama : I Made Nawa Aripurna

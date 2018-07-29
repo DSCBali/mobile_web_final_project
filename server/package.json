@@ -5,10 +5,10 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "include-all": "^1.0.0",
-    "rc": "1.0.1",
-    "sails": "^0.12.13",
-    "sails-disk": "~0.10.9"
+    "include-all": "^4.0.3",
+    "rc": "^1.2.8",
+    "sails": "^1.0.2",
+    "sails-disk": "^1.0.1"
   },
   "scripts": {
     "debug": "node debug app.js",
