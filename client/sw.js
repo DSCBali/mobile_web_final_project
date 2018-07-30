@@ -3,7 +3,8 @@ self.addEventListener('install', event => {
     '/',
     '/css/styles.css',
     '/img',
-    '/restaurant',
+    '/restaurant/',
+    '/restaurant?id=',
     '/js/dbhelper.js',
     '/js/idb.js',
     '/js/main.js',
@@ -21,9 +22,9 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches
-      .match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.match(event.request, { ignoreSearch: true }).then(response => {
+      return response || fetch(event.request);
+    })
   );
   // Coba simulasi offline dan lihat hasilnya
 });
