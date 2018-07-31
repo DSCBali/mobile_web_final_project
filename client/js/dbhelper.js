@@ -4,7 +4,7 @@
  * variabel idb is available.
  */
 
-const dbPromise = idb.open('test-db', 1, function(upgradeDb) {
+const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
   upgradeDb.createObjectStore('restaurants');
 });
 
@@ -224,7 +224,7 @@ class DBHelper {
         });
         return callback(null, data);
       })
-      .catch(err => {
+      .catch(err =>
         dbPromise
           .then(db => {
             const tx = db.transaction('restaurants');
@@ -232,11 +232,8 @@ class DBHelper {
             return keyValStore.get('reviews');
           })
           .then(val => callback(null, val))
-          .catch(() => {
-            console.log('data tidak ada dalam db');
-          });
-        return callback(err);
-      });
+          .catch(() => callback(err))
+      );
   }
 
   /**
@@ -245,15 +242,15 @@ class DBHelper {
   static fetchRestaurantReviewsById(id, callback) {
     DBHelper.fetchRestaurantsReview((error, reviews) => {
       if (error) {
-        callback(error, null);
+        callback(null);
       } else {
         const review = reviews.filter(r => r.restaurant_id == id);
         if (review) {
           // Got the review
-          callback(null, review);
+          callback(review);
         } else {
           // review does not exist in the database
-          callback('Review does not exist', null);
+          callback('Review does not exist');
         }
       }
     });

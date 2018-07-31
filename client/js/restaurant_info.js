@@ -110,7 +110,8 @@ fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (err, reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  console.log('jalan', reviews);
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -183,4 +184,29 @@ getParameterByName = (name, url) => {
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+
+const syncMessage = () => {
+  alert('ALERTED!');
+  navigator.serviceWorker.ready.then(registration =>
+    registration.sync.register('syncReviews')
+  );
+};
+
+const addData = () => {
+  const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
+    upgradeDb.createObjectStore('restaurants');
+  });
+  const data = {
+    restaurant_id: 1,
+    name: 'jck',
+    rating: 3,
+    comments: 'jckss'
+  };
+  dbPromise.then(db => {
+    const tx = db.transaction('restaurants', 'readwrite');
+    const keyValStore = tx.objectStore('restaurants');
+    keyValStore.put(data, 'needs_sync');
+    return tx.complete;
+  });
 };
