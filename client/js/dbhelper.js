@@ -52,6 +52,23 @@ class DBHelper {
   }
 
   /**
+   * Fetch restaurants reviews by restaurant id
+   */
+  static fetchRestaurantReviews(id, callback) {
+    fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+      .then(res => {
+        res.json().then(function(data) {
+          callback(null, data)
+        });
+      })
+      .catch(err => {
+        let error = (`Request failed. Returned status of ${err.status}`);
+
+        callback(error, null);
+      });
+  }
+
+  /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
   static fetchRestaurantByCuisine(cuisine, callback) {
