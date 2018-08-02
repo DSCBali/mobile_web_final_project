@@ -3,7 +3,7 @@
 - modify README dan isi nama kalian seperti di bawah
 - git add & commit perubahan readme ke branch kalian
 
-Nama: Wayan Eka Yudinata
+Nama: 
 
 # Server Setup
 - cd server
