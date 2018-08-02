@@ -123,17 +123,20 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
-  const name = document.createElement('p');
+  const name = document.createElement('div');
+  name.className = 'name';
   name.innerHTML = review.name;
   li.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = new Date(review.createdAt * 1000).toLocaleString('en-GB', { timeZone: "utc" })
+
+  const date = document.createElement('div');
+  date.innerHTML = new Date(review.createdAt).toLocaleString('en-GB', { timeZone: "Asia/Makassar" });
+  date.className = 'timestamp';
   li.appendChild(date);
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  const rating = document.createElement('div');
+  const ratingStars = setRatingStars(review.rating);
+  li.appendChild(ratingStars);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
@@ -166,4 +169,31 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/**
+ * Set rating stars element
+ */
+setRatingStars = rating => {
+  let empty = 5 - rating;
+  let stars = document.createElement('div');
+
+  stars.className = 'rating';
+
+  for (let i = 0; i < rating; i++) {
+    let star = document.createElement('span');
+
+    star.className = 'active';
+    star.innerHTML = '☆';
+    stars.appendChild(star);
+  }
+
+  for (let i = 0; i < empty; i++) {
+    let star = document.createElement('span');
+    
+    star.innerHTML = '☆';
+    stars.appendChild(star);
+  }
+
+  return stars;
 }
