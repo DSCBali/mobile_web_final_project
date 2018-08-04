@@ -32,10 +32,6 @@
   		justify-content: space-around;
 	}
 
-	#restaurants-list li{
-		margin: auto;
-	}
-
 	#restaurants-list .restaurant-img{
 		width: calc(100% + 61px);
 		margin-left: -31px;
