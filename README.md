@@ -1,9 +1,4 @@
-- git clone
-- git checkout -b your_name
-- modify README dan isi nama kalian seperti di bawah
-- git add & commit perubahan readme ke branch kalian
-
-Nama: 
+Nama: Dody Prasetyo 
 
 # Server Setup
 - cd server
