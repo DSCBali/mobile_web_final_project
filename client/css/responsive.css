@@ -2,12 +2,22 @@
 	.filter-options select{
 		width: calc(100% - 20px);
 	}
-
+	section{
+		width: 100%;
+	}
+	#restaurants-list{
+		display: -webkit-box;
+	  	display: -moz-box;
+	  	display: -ms-flexbox;
+	  	display: -webkit-flex;
+	  	display: flex;
+	  	-webkit-flex-flow: row wrap;
+  		justify-content: space-around;
+	}
 	#restaurants-list li {
 		width: auto;
 		display: block;
 	}
-
 	#restaurants-list .restaurant-img{
 		width: calc(100% + 61px);
 		margin-left: -31px;
@@ -15,7 +25,26 @@
 }
 
 @media only screen and (min-width: 600px) and (max-width: 960px){
-
+	#restaurants-list{
+		display: -webkit-box;
+	  	display: -moz-box;
+	  	display: -ms-flexbox;
+	  	display: -webkit-flex;
+	  	display: flex;
+	  	-webkit-flex-flow: row wrap;
+  		justify-content: space-around;
+	}
+	#restaurants-list li {
+		width: auto;
+		display: block;
+	}
+	#restaurants-list li{
+		width: 200px;
+	}
+	#restaurants-list .restaurant-img{
+		width: calc(100% + 61px);
+		margin-left: -31px;
+	}
 }
 
 @media only screen and (min-width: 960px){
