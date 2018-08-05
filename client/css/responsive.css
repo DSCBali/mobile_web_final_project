@@ -46,8 +46,6 @@
 		position: absolute;
 		padding: 8px 31px 10px;
 		bottom: 10px;                 /* adjust this value to move link up or down */
-    	left: 50%;                   /* center link horizontally */
-    	transform: translateX(-50%); /* center link horizontally */
     	width: 120px;
 	}
 	#restaurants-list .restaurant-img{
