@@ -154,6 +154,18 @@ class DBHelper {
     return (`/img/${restaurant.photograph}.jpg`);
   }
 
+  static smallImageUrlForRestaurant(restaurant){
+    return (`/img/${restaurant.photograph}-400px.jpg`);
+  }
+
+  static webPUrlForRestaurant(restaurant){
+    return (`/img/${restaurant.photograph}.webp`);
+  }
+
+  static smallWebPUrlForRestaurant(restaurant){
+    return (`/img/${restaurant.photograph}-400px.webp`);
+  }
+
   /**
    * Map marker for a restaurant.
    */

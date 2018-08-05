@@ -146,10 +146,33 @@ createRestaurantHTML = (restaurant) => {
   contentWrapper.className = 'content-wrapper';
   li.append(contentWrapper);
 
+  const pictureTag = document.createElement('picture');
+  imageWrapper.append(pictureTag);
+
+  const sourceSmallWebP = document.createElement('source');
+  sourceSmallWebP.media = '(max-width: 600px)'
+  sourceSmallWebP.className = 'restaurant-img';
+  sourceSmallWebP.srcset = DBHelper.smallWebPUrlForRestaurant(restaurant);
+  sourceSmallWebP.type = 'image/webp';
+  pictureTag.append(sourceSmallWebP);
+
+  const sourceWebP = document.createElement('source');
+  sourceWebP.className = 'restaurant-img';
+  sourceWebP.srcset = DBHelper.webPUrlForRestaurant(restaurant);
+  sourceWebP.type = 'image/webp';
+  pictureTag.append(sourceWebP);
+
+  const sourceSmallJPEG = document.createElement('source');
+  sourceSmallJPEG.media = '(max-width: 600px)';
+  sourceSmallJPEG.className = 'restaurant-img';
+  sourceSmallJPEG.srcset = DBHelper.smallImageUrlForRestaurant(restaurant);
+  sourceSmallJPEG.type = 'image/jpeg';
+  pictureTag.append(sourceSmallJPEG);
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  imageWrapper.append(image);
+  pictureTag.append(image);
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
