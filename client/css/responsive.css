@@ -68,8 +68,27 @@
   		justify-content: space-around;
 	}
 
+	#restaurants-list li{
+		width: 200px;
+		min-width: 180px;
+		flex: 1;
+		position: relative;
+		padding: 0 40px 60px;
+	}
+
+	#restaurants-list li a{
+		position: absolute;
+		padding: 8px 31px 10px;
+		bottom: 10px;                 /* adjust this value to move link up or down */
+    	width: 120px;
+	}
 	#restaurants-list .restaurant-img{
+		width: calc(100% + 81px);
+		margin-left: -40px;
+	}
+
+	/*#restaurants-list .restaurant-img{
 		width: calc(100% + 61px);
 		margin-left: -31px;
-	}
+	}*/
 }
