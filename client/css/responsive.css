@@ -2,6 +2,14 @@
   nav h1 a {
     letter-spacing: 0;
   }
+  .filter-options select{
+    width: calc(100% - 20px);
+    margin-left: 10px;
+  }
+
+  .filter-options h2{
+    text-align: center;
+  }
 }
 
 @media only screen and (min-width: 600px) and (max-width: 960px){
@@ -9,5 +17,9 @@
 }
 
 @media only screen and (min-width: 960px){
+
+}
+
+@media only screen and (max-width: 1024px){
 
 }
