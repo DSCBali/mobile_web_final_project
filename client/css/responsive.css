@@ -2,9 +2,6 @@
 	.filter-options select{
 		width: calc(100% - 20px);
 	}
-	section{
-		width: 100%;
-	}
 	#restaurants-list{
 		display: -webkit-box;
 	  	display: -moz-box;
@@ -55,9 +52,6 @@
 }
 
 @media only screen and (min-width: 960px){
-	section{
-		width: 100%;
-	}
 	#restaurants-list{
 		display: -webkit-box;
 	  	display: -moz-box;
