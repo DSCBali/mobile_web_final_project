@@ -36,7 +36,6 @@
 	}
 	#restaurants-list li{
 		width: 200px;
-		flex: 1;
 		position: relative;
 		padding: 0 40px 60px;
 	}
