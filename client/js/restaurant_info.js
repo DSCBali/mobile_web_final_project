@@ -137,6 +137,8 @@ fillReviewsHTML = (reviews) => {
     return;
   }
 
+  console.log(reviews)
+
   const ul = document.getElementById('reviews-list');
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
@@ -222,7 +224,13 @@ if (reviewForm) {
         comments: form.get('comments')
       })
     })
-    .then(fillReviewsHTML)
+    .then(function(response){
+      return response.json()
+    })
+    .then(function(result){
+      const arrData = [result]; //jadikan array: https://stackoverflow.com/a/47682370
+      fillReviewsHTML(arrData)
+    })
     .catch(function(err){
       console.log(err);
     })
