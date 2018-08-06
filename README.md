@@ -15,7 +15,7 @@ Semua dokumentasi endpoints dari server bisa dilihat [di sini](https://github.co
 # Things to do
 
 ### Reviews
-- [ ] Fetch reviews for each restaurants
+- [x] Fetch reviews for each restaurants
 
 ### Offline
 - [ ] Setup service worker (workbox optional)

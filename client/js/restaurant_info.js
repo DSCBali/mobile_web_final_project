@@ -35,10 +35,20 @@ fetchRestaurantFromURL = (callback) => {
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
+
       if (!restaurant) {
         console.error(error);
         return;
       }
+
+      //fill reviews
+      fetch(`http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`)
+      .then((response) => response.json())
+      .then(fillReviewsHTML)
+      .catch(function(err){
+        return console.log(err)
+      })
+
       fillRestaurantHTML();
       callback(null, restaurant)
     });
@@ -83,8 +93,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
 }
 
 /**
@@ -110,7 +118,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -122,6 +130,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
+
   const ul = document.getElementById('reviews-list');
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
@@ -139,7 +148,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt);
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -197,6 +206,18 @@ if (reviewForm) {
       rating: form.get('rating'),
       comments: form.get('comments'),
     }
+
+    // jalankan fetch post
+    // jika berhasil, jalankan fillReviewsHTML method
+    // jika gagal, simpan ke db browser (untuk mengatasi kondisi offline)
+    fetch(`http://localhost:1337/reviews`, {
+      method: "POST",
+      body: data
+    })
+    .then(fillReviewsHTML)
+    .catch(function(err){
+      console.log(err);
+    })
 
     // clear values
     event.target.reset();
