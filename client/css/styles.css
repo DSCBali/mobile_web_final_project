@@ -169,6 +169,11 @@ nav h1 a {
   flex-direction: column;
   padding: 0;
   box-sizing: border-box;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
 }
 
 #restaurants-list .img-wrapper {
