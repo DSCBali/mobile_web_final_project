@@ -2,10 +2,9 @@
 <html>
 
 <head>
-  <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/responsive.css">
   <title>Restaurant Info</title>
 </head>
 
@@ -30,7 +29,7 @@
   <!-- End header -->
 
   <!-- Beginning main -->
-  <main id="maincontent">
+  <main id="maincontent" class="restaurant-details-wrapper">
     <!-- Beginning map -->
     <section id="map-container">
       <div id="map"></div>
@@ -50,7 +49,7 @@
       <form id="review-form" action="/set" method="POST">
         <div class="form-row">
           <label for="name">Your name</label>
-          <input type="text" id="name" name="name" placeholder="Name..." required/>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Name..." required/>
         </div>
         <div class="form-row">
           <label for="rating">Your rating</label>
@@ -67,10 +66,12 @@
             <label class="star star-min" for="1stars" title="Very bad - 1 star"></label>
           </fieldset>
         </div>
-        <label for="comments">Your comments</label>
-        <textarea name="comments" id="comments" required rows="10" placeholder="Write your review here.."></textarea>
         <div class="form-row">
-          <button type="submit">Submit</button>
+          <label for="comments">Your comments</label>
+          <textarea name="comments" id="comments" class="form-control" required rows="10" placeholder="Write your review here.."></textarea>
+        </div>
+        <div class="form-row">
+          <input type="submit" value="Submit" class="btn-form" />
         </div>
       </form>
       <ul id="reviews-list"></ul>

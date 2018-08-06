@@ -10,6 +10,51 @@
   .filter-options h2{
     text-align: center;
   }
+
+  /* Restaurant Details */
+  .restaurant-details-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .restaurant-details-wrapper #map-container, 
+  .restaurant-details-wrapper #restaurant-container,
+  .restaurant-details-wrapper #reviews-container,
+  .inside #footer{
+    width: 100%;
+  }
+
+  .inside #footer{
+    position: relative;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .restaurant-details-wrapper #map-container {
+    position: inherit !important;
+    right: inherit !important;
+    left: inherit !important;
+    top: inherit !important;
+    height: auto !important;
+    padding-top: 80px;
+  }
+
+  .restaurant-details-wrapper #map-container #map{
+    height: 400px !important;
+  }
+
+  .restaurant-details-wrapper #restaurant-container{
+    padding-top: 30px;
+    text-align: center;
+  }
+
+  .restaurant-details-wrapper #restaurant-img,
+  .restaurant-details-wrapper #restaurant-cuisine{
+    width: 100%;
+  }
 }
 
 @media only screen and (min-width: 600px) and (max-width: 960px){

@@ -77,7 +77,7 @@ nav h1 a {
     background-color: #eee;
     font-size: 17px;
     margin: 0;
-    width: calc(50% - 80px);
+    width: calc(100% - 80px);
 }
 
 /* Display list items side by side */
@@ -265,7 +265,7 @@ nav h1 a {
 .inside #footer {
   bottom: 0;
   position: absolute;
-  width: 50%;
+  width: calc(50% - 50px);
 }
 #restaurant-name {
   color: #f18200;
@@ -333,3 +333,48 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+
+/* ====================== Restaurant Review Form ====================== */
+.restaurant-details-wrapper #reviews-container h2{
+  padding-top: 35pt;
+}
+
+.restaurant-details-wrapper #reviews-container p{
+  padding-left: 4px;
+}
+.form-row{
+  display: block;
+  margin-bottom: 15px;
+}
+
+.form-row input[type=text],
+.form-row fieldset,
+.form-row textarea{
+  display: block;
+}
+
+.form-row .form-control{
+  margin-top: 8px;
+  width: 90%;
+}
+
+.form-row .btn-form{
+  background: orange;
+  border: 1px solid orange;
+  color: #fff;
+  font-size: 0.8em;
+  width: 100px;
+  padding: 8px 0;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.form-row .btn-form:hover, .form-row .btn-form:focus{
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+} 
