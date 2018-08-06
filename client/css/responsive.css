@@ -12,6 +12,10 @@
   }
 
   /* Restaurant Details */
+  .inside{
+    overflow-x: hidden;
+  }
+
   .restaurant-details-wrapper{
     display: flex;
     flex-direction: row;
@@ -25,6 +29,10 @@
   .restaurant-details-wrapper #reviews-container,
   .inside #footer{
     width: 100%;
+  }
+
+  .form-row .form-control{
+    width: calc(100% - 10px);
   }
 
   .inside #footer{
