@@ -320,14 +320,26 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 0 20px 20px;
+  padding: 20px 20px 20px;
   position: relative;
   width: 85%;
+}
+#reviews-list .review-name{
+  font-size: 16pt;
+}
+#reviews-list .review-star{
+  color: orange;
+}
+#reviews-list .review-date{
+  color: #8D8D8D;
+}
+#reviews-list .review-comment{
+  text-align: justify;
 }
 #reviews-list li p {
   margin: 0 0 10px;

@@ -137,8 +137,6 @@ fillReviewsHTML = (reviews) => {
     return;
   }
 
-  console.log(reviews)
-
   const ul = document.getElementById('reviews-list');
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
@@ -151,19 +149,32 @@ fillReviewsHTML = (reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
+  const name = document.createElement('span');
+  name.className = 'review-name';
+  name.innerHTML = review.name + ' ';
+  const starLabel = document.createElement('span');
+  starLabel.innerHTML = ' rated it ';
+  const starWrapper = document.createElement('span');
+  starWrapper.className = 'review-star';
+  for (let i = 0; i < review.rating; i++) {
+    const star = document.createElement('i');
+    star.className = 'fa fa-star';
+    starWrapper.appendChild(star);
+  }
+
   li.appendChild(name);
+  li.appendChild(starLabel);
+  li.appendChild(starWrapper);
 
   const date = document.createElement('p');
-  date.innerHTML = new Date(review.createdAt);
+  const dateReview = new Date(review.createdAt);
+  const dateWrapper = moment(dateReview).startOf('second').fromNow(); //using moment.js relative time
+  date.className = 'review-date';
+  date.innerHTML = dateWrapper;
   li.appendChild(date);
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
-
   const comments = document.createElement('p');
+  comments.className = 'review-comment';
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
