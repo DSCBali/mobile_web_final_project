@@ -39,7 +39,12 @@
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h1 id="restaurant-name"></h1>
-      <img id="restaurant-img">
+      <picture id="image-wrapper">
+        <source id="source-small-webp" class="restaurant-img">
+        <source id="source-webp" class="restaurant-img">
+        <source id="source-small-jpeg" class="restaurant-img">
+        <img id="restaurant-img" class="restaurant-img">
+      </picture>
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>

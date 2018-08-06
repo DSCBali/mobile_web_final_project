@@ -59,7 +59,7 @@
     text-align: center;
   }
 
-  .restaurant-details-wrapper #restaurant-img,
+  .restaurant-details-wrapper .restaurant-img,
   .restaurant-details-wrapper #restaurant-cuisine{
     width: 100%;
   }
