@@ -120,9 +120,15 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+
+  // check apakah header text review-title sudah dibuat
+  const checker = document.getElementById('review-title');
+  if(!checker){
+    const title = document.createElement('h2');
+    title.id = 'review-title';
+    title.innerHTML = 'Reviews';
+    container.appendChild(title);
+  }
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -199,20 +205,22 @@ if (reviewForm) {
     event.preventDefault();
     const restaurant_id = getParameterByName('id'); 
     const form = new FormData(event.target);
-    const data = {
-      id: 'needs_sync',
-      restaurant_id,
-      name: form.get('name'),
-      rating: form.get('rating'),
-      comments: form.get('comments'),
-    }
 
     // jalankan fetch post
     // jika berhasil, jalankan fillReviewsHTML method
     // jika gagal, simpan ke db browser (untuk mengatasi kondisi offline)
     fetch(`http://localhost:1337/reviews`, {
-      method: "POST",
-      body: data
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: 'needs_sync', restaurant_id,
+        name: form.get('name'),
+        rating: form.get('rating'),
+        comments: form.get('comments')
+      })
     })
     .then(fillReviewsHTML)
     .catch(function(err){
@@ -222,13 +230,7 @@ if (reviewForm) {
     // clear values
     event.target.reset();
 
-    // Tambahkan method post fetch reviews
     /**
-     * panggil fillReviewsHTML setelah sukses post
-     * 
-     * di dalam catch callbacknya tambahkan data yg di atas ke dalam database
-     * masih di dalam catch tambahkan method seperti di bawah
-     * 
      * navigator.serviceWorker.ready.then(function(swRegistration) {
      *  return swRegistration.sync.register('syncReviews');
      * });
