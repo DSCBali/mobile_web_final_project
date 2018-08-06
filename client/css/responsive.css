@@ -1,4 +1,4 @@
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) {
   nav h1 a {
     letter-spacing: 0;
   }
@@ -26,10 +26,19 @@
 
   .restaurant-details-wrapper #map-container, 
   .restaurant-details-wrapper #restaurant-container,
-  .restaurant-details-wrapper #reviews-container,
   .inside #footer{
     width: 100%;
   }
+
+  .restaurant-details-wrapper #restaurant-container{
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .restaurant-details-wrapper #reviews-container{
+    width: calc(100% - 40px);
+  }
+
 
   .form-row .form-control{
     width: calc(100% - 10px);
@@ -65,17 +74,81 @@
   }
 }
 
-@media only screen and (min-width: 600px) and (max-width: 960px){
+@media only screen and (min-width: 600px) and (max-width: 1024px){
+  nav h1 a {
+    letter-spacing: 0;
+  }
   .filter-options select{
     width: calc(90% / 2);
   }
 
-  .form-control{
-    width: calc(90% - 20px);
+  .filter-options h2{
+    text-align: center;
   }
 
-  .restaurant-details-wrapper #reviews-container h2{
-    margin-bottom: 8px;
+  /* Restaurant Details */
+  .inside{
+    overflow-x: hidden;
+  }
+
+  .restaurant-details-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .restaurant-details-wrapper #map-container, 
+  .inside #footer{
+    width: 100%;
+  }
+
+  .restaurant-details-wrapper #restaurant-container{
+    padding-left: 15px;
+    padding-right: 15px;
+    width: calc(100% - 70px);
+  }
+
+  .restaurant-details-wrapper #reviews-container{
+    width: calc(100% - 40px);
+  }
+
+  .form-row .form-control{
+    width: calc(100% - 10px);
+  }
+
+  .inside #footer{
+    position: relative;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .restaurant-details-wrapper #map-container {
+    position: inherit !important;
+    right: inherit !important;
+    left: inherit !important;
+    top: inherit !important;
+    height: auto !important;
+    padding-top: 80px;
+  }
+
+  .restaurant-details-wrapper #map-container #map{
+    height: 400px !important;
+  }
+
+  .restaurant-details-wrapper #restaurant-container{
+    padding-top: 30px;
+    text-align: center;
+  }
+
+  .restaurant-details-wrapper .restaurant-img,
+  .restaurant-details-wrapper #restaurant-cuisine{
+    width: 100%;
+  }
+
+  #reviews-list li{
+    width: calc(100% - 40px);
   }
 }
 

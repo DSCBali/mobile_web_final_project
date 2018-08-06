@@ -294,6 +294,7 @@ nav h1 a {
 #restaurant-address {
   font-size: 12pt;
   margin: 10px 0px;
+  text-align: left;
 }
 #restaurant-cuisine {
   background-color: #6200EE;
@@ -358,7 +359,7 @@ nav h1 a {
   color: #8D8D8D;
 }
 #reviews-list .review-comment{
-  text-align: justify;
+  word-wrap: break-word;
 }
 #reviews-list li p {
   margin: 0 0 10px;
