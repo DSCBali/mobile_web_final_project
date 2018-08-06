@@ -324,7 +324,7 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-  border: 2px solid #f3f3f3;
+  border: none;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
@@ -332,7 +332,16 @@ nav h1 a {
   padding: 20px 20px 20px;
   position: relative;
   width: 85%;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
 }
+#reviews-list li:hover{
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
 #reviews-list .review-name{
   font-size: 16pt;
 }
