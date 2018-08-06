@@ -2,10 +2,11 @@
 <html>
 
 <head>
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
-  <link rel="stylesheet" href="css/responsive.css">
   <title>Restaurant Info</title>
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 </head>
 
 <body class="inside">
@@ -52,19 +53,19 @@
           <input type="text" id="name" name="name" class="form-control" placeholder="Name..." required/>
         </div>
         <div class="form-row">
-          <label for="rating">Your rating</label>
-          <fieldset class="rating">
-            <input type="radio" class="star star-max" id="5stars" name="rating" value="5" />
-            <label class="star star-max" for="5stars" title="Excellent - 5 stars"></label>
-            <input type="radio" class="star" id="4stars" name="rating" value="4" />
-            <label class="star" for="4stars" title="Very good - 4 stars"></label>
-            <input type="radio" class="star" id="3stars" name="rating" value="3" />
-            <label class="star" for="3stars" title="Acceptable - 3 stars"></label>
-            <input type="radio" class="star" id="2stars" name="rating" value="2" />
-            <label class="star" for="2stars" title="Bad - 2 stars"></label>
-            <input type="radio" class="star star-min" id="1stars" name="rating" value="1" required/>
-            <label class="star star-min" for="1stars" title="Very bad - 1 star"></label>
-          </fieldset>
+          <label for="rating" style="display: block">Your rating</label>
+          <div class="stars">
+            <input class="star star-5" id="star-5" type="radio" name="rating"/>
+            <label class="star star-5" for="star-5"></label>
+            <input class="star star-4" id="star-4" type="radio" name="rating"/>
+            <label class="star star-4" for="star-4"></label>
+            <input class="star star-3" id="star-3" type="radio" name="rating"/>
+            <label class="star star-3" for="star-3"></label>
+            <input class="star star-2" id="star-2" type="radio" name="rating"/>
+            <label class="star star-2" for="star-2"></label>
+            <input class="star star-1" id="star-1" type="radio" name="rating"/>
+            <label class="star star-1" style="padding-left: 0" for="star-1"></label>
+          </div>
         </div>
         <div class="form-row">
           <label for="comments">Your comments</label>
