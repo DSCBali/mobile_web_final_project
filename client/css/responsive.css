@@ -37,8 +37,6 @@
   .inside .restaurant-details-wrapper #reviews-container, 
   .inside #footer{
     width: 100%;
-    padding-left: 0;
-    padding-right: 0;
   }
 
   .inside #map-container {
@@ -49,6 +47,10 @@
     height: auto !important;
     padding-top: 80px;
     padding-bottom:0;
+  }
+
+  .inside #maincontent{
+    padding-top: 0;
   }
 
   .inside #map-container #map{
