@@ -25,7 +25,6 @@
   }
 
   .restaurant-details-wrapper #map-container, 
-  .restaurant-details-wrapper #restaurant-container,
   .inside #footer{
     width: 100%;
   }
@@ -33,6 +32,7 @@
   .restaurant-details-wrapper #restaurant-container{
     padding-left: 15px;
     padding-right: 15px;
+    width: calc(100% - 70px);
   }
 
   .restaurant-details-wrapper #reviews-container{
