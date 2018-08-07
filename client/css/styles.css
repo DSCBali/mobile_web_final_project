@@ -270,6 +270,7 @@ nav h1 a {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 50%;
+  padding-top: 110px;
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
