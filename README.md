@@ -11,7 +11,7 @@ Nama: Eksa Pramindanata
 - [x] Fetch reviews for each restaurants
 
 # Offline
-- [ ] Setup service worker (workbox optional)
+- [x] Setup service worker (workbox optional)
 - [ ] Setup IndexedDb
 - [ ] Save to DB for every get request
 - [ ] Sync new reviews
