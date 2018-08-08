@@ -8,21 +8,21 @@ var markers = [];
 document.addEventListener('DOMContentLoaded', event => {
   fetchNeighborhoods();
   fetchCuisines();
-  registerServiceWorker();
+  // registerServiceWorker();
 });
 
-const registerServiceWorker = () => {
-  if (!navigator.serviceWorker) return;
+// const registerServiceWorker = () => {
+//   if (!navigator.serviceWorker) return;
 
-  navigator.serviceWorker
-    .register('sw.js')
-    .then(() => {
-      console.log('Service Worker Registration Success!');
-    })
-    .catch(() => {
-      console.log('Service Worker Registration Failed!');
-    });
-};
+//   navigator.serviceWorker
+//     .register('sw.js')
+//     .then(() => {
+//       console.log('Service Worker Registration Success!');
+//     })
+//     .catch(() => {
+//       console.log('Service Worker Registration Failed!');
+//     });
+// };
 
 /**
  * Fetch all neighborhoods and set their HTML.

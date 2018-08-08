@@ -135,25 +135,34 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = review => {
   const li = document.createElement('li');
-  const name = document.createElement('p');
+  const name = document.createElement('h3');
   name.innerHTML = review.name;
+  name.style.marginBottom = 0;
   li.appendChild(name);
 
   const date = document.createElement('p');
   const t = new Date(Date.now(review.createdAt));
   date.innerHTML = t.toLocaleDateString('en-US', {
-    hour: 'numeric',
-    second: 'numeric',
-    minute: 'numeric',
-    weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
+  date.style.fontSize = '8pt';
   li.appendChild(date);
 
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  let star = '';
+
+  for (let x = 1; x <= parseInt(review.rating); x++) {
+    star = star + '★';
+  }
+
+  for (let x = 1; x <= 5 - parseInt(review.rating); x++) {
+    star = star + '☆';
+  }
+
+  rating.innerHTML = star;
+  rating.style.fontSize = '13pt';
   li.appendChild(rating);
 
   const comments = document.createElement('p');
