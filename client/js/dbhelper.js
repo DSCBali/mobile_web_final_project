@@ -80,7 +80,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       }else {
-        const reviews = AllReviews.find(r => r.restaurant_id == id);
+        const reviews = AllReviews.filter(r => r.restaurant_id == restaurant_id);
         if (reviews) {
           callback(null, reviews);
         }else {

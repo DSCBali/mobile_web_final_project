@@ -13,12 +13,16 @@ let restaurants,
 var map
 var markers = []
 
+var totalR = []
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  fetchReviews();
+
   
 });
 contoh = () => {
@@ -46,23 +50,15 @@ fetchReviews = () => {
       console.log(error);
     } else {
       self.reviews = reviews;
-      fillReviews();
+      reviews.map(r => {
+        totalR.push(r);
+      })
     }
   })
 }
 /**
  * fill reviews html
  */
-
- fillReviews = (reviews = self.reviews) => {
-    const list = document.getElementById('restaurants-list')
-    reviews.forEach(review => {
-      const rating = document.createElement('li');
-      rating.innerHTML = review.name+": " + review.rating
-      list.append(rating);
-      console.log(review);
-    })
- }
 
 
 /**
@@ -186,12 +182,33 @@ createRestaurantHTML = (restaurant) => {
   image.setAttribute('srcset',`/img/${restaurant.photograph}-400px.webp 500w, /img/${restaurant.photograph}-400px.jpg 500w, /img/${restaurant.photograph}.webp 1000w, /img/${restaurant.photograph}.jpg 1000w,`);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);  
   li.append(image);
-  
-  console.log(reviews)
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   li.append(name);
+
+  const results = totalR.filter(r => r.restaurant_id == restaurant.id)
+  
+  let totalrating = 0;
+  for (var i = 0; i < results.length;i++) {
+    totalrating += parseInt(results[i].rating);
+  }
+  let avRating = (totalrating/results.length).toFixed(1);  
+  const productRating = document.createElement('div');
+  const rating = document.createElement('span');
+  const ratingStar = document.createElement('span');
+  productRating.setAttribute('class', 'product_rating');
+  rating.setAttribute('class','rating');
+  ratingStar.setAttribute('class', 'rating_star');
+  rating.append(ratingStar);
+  productRating.append(rating);
+  ratingStar.style.width = (avRating/5)*100 + "%";
+  const numRev = document.createElement('span');
+  numRev.innerHTML ='  ' + results.length + ' reviews';
+  productRating.append(numRev);
+
+  li.append(productRating);
+
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
@@ -205,8 +222,6 @@ createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
-  fetchReviews()
-
   return li
 }
 
@@ -223,5 +238,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
-
 

@@ -151,6 +151,23 @@ nav h1 a {
   border-radius: 3px;
   transition: ease-in-out .1s;
 }
+#restaurants-list li .product_rating{
+  height: 18px;
+  margin-top: 5px;
+}
+#restaurants-list li .product_rating .rating{
+  display: inline-block;
+  height: 13px;
+  width: 78px;
+  margin-right: 2px;
+  background: url('/img/big-star1.png') 0 -13px no-repeat;
+  vertical-align: middle;
+}
+#restaurants-list li .product_rating .rating .rating_star{
+  display: inline-block;
+  height: inherit;
+  background: url('/img/big-star1.png') 0 0 no-repeat;
+}
 @media screen and (max-width:600px) {
   #restaurants-list li {
     width: 30%;
