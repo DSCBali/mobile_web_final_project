@@ -12,7 +12,10 @@ class DBHelper {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants/`;
   }
-
+  static get REVIEWS_URL(){
+    const port = 1337
+    return `http://localhost:${port}/reviews/`;
+  }
   /**
    * Fetch all restaurants.
    */
@@ -49,6 +52,42 @@ class DBHelper {
         }
       }
     });
+  }
+    /**
+   * Fetch review all restaurant
+   */
+  static fetchReviews(callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost:1337/reviews/');
+    xhr.onload = () => {
+      if (xhr.status == 200) {
+        const json = JSON.parse(xhr.responseText);
+        const AllReviews = json;
+        callback(null, AllReviews);
+      }else {
+        const error = (`Request failed. Return status of ${xhr.status}`);
+        callback(error, null);
+      }
+    };
+    xhr.send();
+  }
+  /**
+   * Fetch review by restaurant_id
+   */
+  static fetchReviewByRestaurantId(restaurant_id, callback) {
+
+    DBHelper.fetchReviews((error,AllReviews) => {
+      if (error) {
+        callback(error, null);
+      }else {
+        const reviews = AllReviews.find(r => r.restaurant_id == id);
+        if (reviews) {
+          callback(null, reviews);
+        }else {
+          callback('No Review found!', null);
+        }
+      }
+    })
   }
 
   /**
@@ -139,6 +178,7 @@ class DBHelper {
       }
     });
   }
+
 
   /**
    * Restaurant page URL.

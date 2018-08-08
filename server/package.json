@@ -7,8 +7,8 @@
   "dependencies": {
     "include-all": "^4.0.3",
     "rc": "^1.2.8",
-    "sails": "^1.0.2",
-    "sails-disk": "^1.0.1"
+    "sails": "^0.12",
+    "sails-disk": "^0.10"
   },
   "scripts": {
     "debug": "node debug app.js",

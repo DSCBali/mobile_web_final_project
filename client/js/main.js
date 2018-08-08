@@ -1,6 +1,15 @@
+if ('serviceWorker' in navigator) {
+  window,addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/manual-sw.js')
+      .then(reg => console.log('Service worker: Registered'))
+      .catch(err => console.log(`Service Worker : Error ${err}`))
+  })
+}
+
 let restaurants,
   neighborhoods,
-  cuisines
+  cuisines,reviews
 var map
 var markers = []
 
@@ -10,8 +19,11 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  
 });
-
+contoh = () => {
+  
+}
 /**
  * Fetch all neighborhoods and set their HTML.
  */
@@ -25,6 +37,33 @@ fetchNeighborhoods = () => {
     }
   });
 }
+/**
+ * fetch all reviews
+ */
+fetchReviews = () => {
+  DBHelper.fetchReviews((error, reviews) => {
+    if (error) {
+      console.log(error);
+    } else {
+      self.reviews = reviews;
+      fillReviews();
+    }
+  })
+}
+/**
+ * fill reviews html
+ */
+
+ fillReviews = (reviews = self.reviews) => {
+    const list = document.getElementById('restaurants-list')
+    reviews.forEach(review => {
+      const rating = document.createElement('li');
+      rating.innerHTML = review.name+": " + review.rating
+      list.append(rating);
+      console.log(review);
+    })
+ }
+
 
 /**
  * Set neighborhoods HTML.
@@ -107,6 +146,10 @@ updateRestaurants = () => {
 }
 
 /**
+ * create review html
+ */
+
+/**
  * Clear current restaurants, their HTML and remove their map markers.
  */
 resetRestaurants = (restaurants) => {
@@ -140,8 +183,11 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('srcset',`/img/${restaurant.photograph}-400px.webp 500w, /img/${restaurant.photograph}-400px.jpg 500w, /img/${restaurant.photograph}.webp 1000w, /img/${restaurant.photograph}.jpg 1000w,`);
+  image.src = DBHelper.imageUrlForRestaurant(restaurant);  
   li.append(image);
+  
+  console.log(reviews)
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
@@ -159,6 +205,7 @@ createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
+  fetchReviews()
 
   return li
 }
@@ -176,3 +223,5 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+
