@@ -1,12 +1,3 @@
-if ('serviceWorker' in navigator) {
-  window,addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/manual-sw.js')
-      .then(reg => console.log('Service worker: Registered'))
-      .catch(err => console.log(`Service Worker : Error ${err}`))
-  })
-}
-
 let restaurants,
   neighborhoods,
   cuisines,reviews
@@ -23,11 +14,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
   fetchReviews();
 
-  
 });
-contoh = () => {
-  
-}
 /**
  * Fetch all neighborhoods and set their HTML.
  */
@@ -56,10 +43,6 @@ fetchReviews = () => {
     }
   })
 }
-/**
- * fill reviews html
- */
-
 
 /**
  * Set neighborhoods HTML.
@@ -180,7 +163,8 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.setAttribute('srcset',`/img/${restaurant.photograph}-400px.webp 500w, /img/${restaurant.photograph}-400px.jpg 500w, /img/${restaurant.photograph}.webp 1000w, /img/${restaurant.photograph}.jpg 1000w,`);
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);  
+  image.src = DBHelper.imageUrlForRestaurant(restaurant); 
+  image.setAttribute('alt', restaurant.name); 
   li.append(image);
 
   const name = document.createElement('h1');
@@ -188,7 +172,6 @@ createRestaurantHTML = (restaurant) => {
   li.append(name);
 
   const results = totalR.filter(r => r.restaurant_id == restaurant.id)
-  
   let totalrating = 0;
   for (var i = 0; i < results.length;i++) {
     totalrating += parseInt(results[i].rating);

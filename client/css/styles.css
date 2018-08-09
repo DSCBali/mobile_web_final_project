@@ -36,10 +36,13 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 	display: block;
 }
 #maincontent {
+  display: flex;
+  flex-wrap: wrap;
   background-color: #f3f3f3;
   min-height: 100%;
 }
 #footer {
+  width: 100%;
   background-color: #444;
   color: #aaa;
   font-size: 8pt;
@@ -71,7 +74,7 @@ nav h1 a {
     background-color: #eee;
     font-size: 17px;
     margin: 0;
-    width: calc(50% - 80px);
+    width: 100%;
 }
 
 /* Display list items side by side */
@@ -151,23 +154,6 @@ nav h1 a {
   border-radius: 3px;
   transition: ease-in-out .1s;
 }
-#restaurants-list li .product_rating{
-  height: 18px;
-  margin-top: 5px;
-}
-#restaurants-list li .product_rating .rating{
-  display: inline-block;
-  height: 13px;
-  width: 78px;
-  margin-right: 2px;
-  background: url('/img/big-star1.png') 0 -13px no-repeat;
-  vertical-align: middle;
-}
-#restaurants-list li .product_rating .rating .rating_star{
-  display: inline-block;
-  height: inherit;
-  background: url('/img/big-star1.png') 0 0 no-repeat;
-}
 @media screen and (max-width:600px) {
   #restaurants-list li {
     width: 30%;
@@ -217,28 +203,65 @@ nav h1 a {
 }
 /* ====================== Restaurant Details ====================== */
 .inside header {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   width: 100%;
   z-index: 1000;
 }
 .inside #map-container {
-  background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 50%;
+  display: inline-block;
+  position: relative;
+  height: 300px;
+  width: 40%;
+  padding: 30px 0px 80px 0px;
+}
+.inside #map-container h2 {
+  color: #f18200;
+  font-size: 24pt;
+  font-weight: 300;
+  letter-spacing: -1px;
+  padding-bottom: 1pt;
 }
 .inside #map {
   background-color: #ccc;
   height: 100%;
   width: 100%;
+  box-shadow: 0 0 2px 0 grey;
+  border-radius: 3px;
+}
+#map.index-maps{
+  z-index: 2;
+  width: 100vw;
 }
 .inside #footer {
   bottom: 0;
   position: absolute;
-  width: 50%;
+  width: 100%;
+}
+.datail-rating {
+  margin-top: 20px;
+}
+.datail-rating div {
+  padding: 5px 0;
+}
+.datail-rating div span {
+  width: 55px;
+  display: inline-block;
+}
+.datail-rating div .bar-background {
+  display: inline-block;
+  height: 15px;
+  width: 66%;
+  position: relative;
+  background-color: #dcdcdc;
+}
+.bar-background .bar-stars{
+  display: inline-block;
+  height: 15px;
+  position: relative;
+  transition: ease-in-out .5s;
+  width: 0%;
+  background-color: #f18200;
 }
 #restaurant-name {
   color: #f18200;
@@ -250,6 +273,13 @@ nav h1 a {
   text-transform: uppercase;
   line-height: 1.1;
 }
+.restaurant-additional-info {
+  width: 30%;
+}
+.restaurant-additional-info #overviews h3 {
+  margin-bottom: 0px;
+}
+
 #restaurant-img {
 	width: 90%;
 }
@@ -269,14 +299,25 @@ nav h1 a {
   text-transform: uppercase;
 	width: 90%;
 }
-#restaurant-container, #reviews-container {
+#restaurant-container{
+  display: flex;
+  flex-direction: row;
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 40px 30px;
+  padding: 10px 40px 30px;
+  width: 100%;
+}
+#restaurant-container .restaurant-main-info {
   width: 50%;
 }
 #reviews-container {
-  padding: 30px 40px 80px;
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  /* padding: 10px 40px 30px; */
+  width: 50%;
+}
+#reviews-container {
+  padding:30px 0px 80px 40px;
 }
 #reviews-container h2 {
   color: #f58500;
@@ -289,14 +330,31 @@ nav h1 a {
   margin: 0;
   padding: 0;
 }
+.product_rating{
+  height: 18px;
+  margin-bottom: 5px;
+}
+.product_rating .rating{
+  display: inline-block;
+  height: 13px;
+  width: 78px;
+  margin-right: 2px;
+  background: url('/img/big-star1.png') 0 -13px no-repeat;
+  vertical-align: middle;
+}
+.product_rating .rating .rating_star{
+  display: inline-block;
+  height: inherit;
+  background: url('/img/big-star1.png') 0 0 no-repeat;
+}
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 0 20px 20px;
+  padding:20px;
   position: relative;
   width: 85%;
 }

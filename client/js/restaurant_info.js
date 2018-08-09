@@ -1,9 +1,13 @@
 let restaurant;
 var map;
+var reviews =[]
 
 /**
  * Initialize Google map, called from HTML.
  */
+document.addEventListener('DOMContentLoaded', (event) => {
+  fetchReviews();
+});
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
@@ -41,14 +45,35 @@ fetchRestaurantFromURL = (callback) => {
       }
       fillRestaurantHTML();
       callback(null, restaurant)
+      
     });
   }
 }
+/**
+ * try fetch all the reviews
+ */
 
+
+fetchReviews = () => {
+  const id = getParameterByName('id');
+  DBHelper.fetchReviewByRestaurantId(id,(error, totalReviews) => {
+    if (error) {
+      console.log(error);
+    } else {
+      self.totalReviews = totalReviews;
+      totalReviews.map(r => {
+        reviews.push(r);
+      })
+      fillReviewsHTML(reviews);
+    }
+  })
+}
 /**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+  overviewHtml()  
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -57,6 +82,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
+  image.setAttribute('alt', restaurant.name);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -67,7 +93,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  // fillReviewsHTML();
 }
 
 /**
@@ -93,12 +119,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
-
+  console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -119,15 +145,24 @@ createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.style.fontWeight = 700;
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  
+  date.innerHTML = new Date(review.createdAt).toLocaleTimeString("en-US") ;
   li.appendChild(date);
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  const productRating = document.createElement('div');
+  const rating = document.createElement('span');
+  const ratingStar = document.createElement('span');
+  productRating.setAttribute('class', 'product_rating');
+  rating.setAttribute('class','rating');
+  ratingStar.setAttribute('class', 'rating_star');
+  rating.append(ratingStar);
+  productRating.append(rating);
+  ratingStar.style.width = (review.rating/5)*100 + "%";
+  li.append(productRating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
@@ -160,4 +195,41 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+overviewHtml = () => {
+  const overview = document.getElementById('overviews');
+
+  let totalrating = 0;
+  for (var i = 0; i < reviews.length;i++) {
+    totalrating += parseInt(reviews[i].rating);
+  }
+  let avRating = (totalrating/reviews.length).toFixed(1); 
+  const productRating = document.createElement('div');
+  const rating = document.createElement('span');
+  const ratingStar = document.createElement('span');
+  productRating.setAttribute('class', 'product_rating');
+  rating.setAttribute('class','rating');
+  ratingStar.setAttribute('class', 'rating_star');
+  rating.append(ratingStar);
+  productRating.append(rating);
+  ratingStar.style.width = (avRating/5)*100 + "%";
+  const numRev = document.createElement('span');
+  numRev.innerHTML ='  ' + reviews.length + ' reviews';
+  productRating.append(numRev);
+  
+  let criteria;
+  let goods = ['<h3>Gerbage</h3>','<h3>Stone</h3>','<h3>Bronze</h3>','<h3>Silver</h3>','<h3>Gold</h3>']
+  if(parseInt(avRating)!=0){
+    criteria = goods[Math.round(avRating)-1]
+  } else {
+    criteria = "<h3>No Reviews yet</h3>"
+  }
+  let reviewlength = reviews.length;
+  overview.innerHTML = criteria
+  for(let i = 1; i<=5;i++){
+    document.getElementById(`bar-stars-${i}`).style.width = ((reviews.filter(r => r.rating == i).length)/reviewlength)*100 + '%';
+    document.getElementById(`bar-stars-n${i}`).innerHTML = Math.round(((reviews.filter(r => r.rating == i).length)/reviewlength)*100) + ' %';
+  }
+  overview.append(productRating)
 }

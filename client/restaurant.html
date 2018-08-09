@@ -2,10 +2,11 @@
 <html>
 
 <head>
-  <!-- Normalize.css for better cross-browser consistency -->
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <!-- Main CSS file -->
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
   <title>Restaurant Info</title>
 </head>
 
@@ -31,18 +32,57 @@
 
   <!-- Beginning main -->
   <main id="maincontent">
-    <!-- Beginning map -->
-    <section id="map-container">
-      <div id="map"></div>
-    </section>
-    <!-- End map -->
+    
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h1 id="restaurant-name"></h1>
-      <img id="restaurant-img">
-      <p id="restaurant-cuisine"></p>
-      <p id="restaurant-address"></p>
-      <table id="restaurant-hours"></table>
+      <div class="restaurant-main-info">
+        <h1 id="restaurant-name"></h1>
+        <img id="restaurant-img">
+        <p id="restaurant-cuisine"></p>
+       
+      </div>
+      <div class="restaurant-additional-info">
+          <p id="restaurant-address"></p>
+        <div id="overviews"></div>
+        <table id="restaurant-hours"></table>
+        <div class="datail-rating">
+          <div class="stars-5">
+            <span>Gold</span>
+            <span class="bar-background">
+              <span id="bar-stars-5" class="bar-stars"></span>
+            </span>
+            <span id="bar-stars-n5"></span>
+          </div>
+          <div class="stars-4">
+            <span>Silver</span>
+            <span class="bar-background">
+              <span id="bar-stars-4" class="bar-stars"></span>
+            </span>
+            <span id="bar-stars-n4"></span>
+          </div>
+          <div class="stars-3">
+            <span>Bronze</span>
+            <span class="bar-background">
+              <span id="bar-stars-3" class="bar-stars"></span>
+            </span>
+            <span id="bar-stars-n3"></span>
+          </div>
+          <div class="stars-5">
+            <span>Stone</span>
+            <span class="bar-background">
+              <span id="bar-stars-2" class="bar-stars"></span>
+            </span>
+            <span id="bar-stars-n2" ></span>
+          </div>
+          <div class="stars-5">
+            <span>Gerbage</span>
+            <span class="bar-background">
+              <span id="bar-stars-1" class="bar-stars"></span>
+            </span>
+            <span id="bar-stars-n1"></span>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
@@ -50,6 +90,12 @@
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
+    <!-- Beginning map -->
+    <section id="map-container">
+      <h2>Location</h2>
+      <div id="map"></div>
+    </section>
+    <!-- End map -->
   </main>
   <!-- End main -->
 
@@ -67,6 +113,7 @@
   <!-- Database helpers -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
+  <script src="js/init.js"></script>
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDWVakzxJSRtpMhMzaX8tt9b2vHc38cpE&libraries=places&callback=initMap"></script>

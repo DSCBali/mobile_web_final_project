@@ -58,7 +58,7 @@ class DBHelper {
    */
   static fetchReviews(callback) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:1337/reviews/');
+    xhr.open('GET', DBHelper.REVIEWS_URL);
     xhr.onload = () => {
       if (xhr.status == 200) {
         const json = JSON.parse(xhr.responseText);
@@ -75,19 +75,18 @@ class DBHelper {
    * Fetch review by restaurant_id
    */
   static fetchReviewByRestaurantId(restaurant_id, callback) {
-
-    DBHelper.fetchReviews((error,AllReviews) => {
-      if (error) {
-        callback(error, null);
+    DBHelper.fetchReviews((error, reviews) => {
+      if(error) {
+        callback(error, nul);
       }else {
-        const reviews = AllReviews.filter(r => r.restaurant_id == restaurant_id);
-        if (reviews) {
-          callback(null, reviews);
-        }else {
-          callback('No Review found!', null);
+        const results = reviews.filter(r => r.restaurant_id == restaurant_id);
+        if(results) {
+          callback(null, results);
+        }else{
+          callback('No Reviews yet!', null);
         }
       }
-    })
+    }) 
   }
 
   /**
