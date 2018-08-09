@@ -4,7 +4,6 @@ let restaurants,
 var map
 var markers = []
 
-var totalR = []
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -171,24 +170,10 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  const results = totalR.filter(r => r.restaurant_id == restaurant.id)
-  let totalrating = 0;
-  for (var i = 0; i < results.length;i++) {
-    totalrating += parseInt(results[i].rating);
-  }
-  let avRating = (totalrating/results.length).toFixed(1);  
   const productRating = document.createElement('div');
-  const rating = document.createElement('span');
-  const ratingStar = document.createElement('span');
-  productRating.setAttribute('class', 'product_rating');
-  rating.setAttribute('class','rating');
-  ratingStar.setAttribute('class', 'rating_star');
-  rating.append(ratingStar);
-  productRating.append(rating);
-  ratingStar.style.width = (avRating/5)*100 + "%";
-  const numRev = document.createElement('span');
-  numRev.innerHTML ='  ' + results.length + ' reviews';
-  productRating.append(numRev);
+  productRating.setAttribute('id',`product-rating-r${restaurant.id}`)
+  
+  createRating(restaurant.id);
 
   li.append(productRating);
 
@@ -222,3 +207,33 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 }
 
+createRating = (id) => {
+  DBHelper.getRev(id, (error, reviews)=>{
+    const productRating = document.getElementById(`product-rating-r${id}`)
+    let totalrating = 0;
+    reviews.map(r => {
+      totalrating += parseInt(r.rating);
+    }) 
+    let avRating = (totalrating/reviews.length).toFixed(1);
+    const rating = document.createElement('span');
+    const ratingStar = document.createElement('span');
+    productRating.setAttribute('class', 'product_rating');
+    rating.setAttribute('class','rating');
+    ratingStar.setAttribute('class', 'rating_star');
+    rating.append(ratingStar);
+    productRating.append(rating);
+    ratingStar.style.width = (avRating/5)*100 + "%";
+    const numRev = document.createElement('span');
+    numRev.innerHTML ='  ' + reviews.length + ' reviews';
+    productRating.append(numRev);
+  })
+
+
+
+
+
+  
+   
+  
+  
+}

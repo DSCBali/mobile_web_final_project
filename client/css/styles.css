@@ -349,22 +349,48 @@ nav h1 a {
 }
 input#rev-name{
   display: inline-block;
-  width: 100%;
-  height: 35px;
+  width: 97%;
+  height: 10px;
   margin-bottom: 15px;
+  border: none;
+  box-shadow: 0 0 2px 0 gray;
+  border-radius: 3px;
+  padding: 10px;
+}
+input#rev-name:focus {
+  outline: none;
+  box-shadow: 0 0 2px 0 green;
 }
 textarea#rev-comments{
   display: inline-block;
-  width: 100%;
+  width: 97%;
   height: 60px;
   margin-bottom: 15px;
+  border: none;
+  box-shadow: 0 0 2px 0 gray;
+  border-radius: 3px;
+  padding: 10px;
+}
+textarea#rev-comments:focus{
+  outline: none;
+  box-shadow: 0 0 2px 0 green;
 }
 #stars-container{
-  height: 20px;
+  height: 18px;
   margin-bottom: 10px;
+}
+#submit-form{
+  background-color: #f18200;
+  width: 100px;
+  border: none;
+  height: 30px;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
 }
 #stars-container .polygon {
   height: 100%;
+  cursor: pointer;
 }
 .product_rating{
   height: 18px;
