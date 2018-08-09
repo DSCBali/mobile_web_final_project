@@ -1,6 +1,6 @@
 importScripts('./js/cache-polyfill.js');
 
-const cacheName = 'v2';
+const cacheName = 'v5';
 
 const files = [
     './',
@@ -9,7 +9,6 @@ const files = [
     './js/dbhelper.js',
     './js/idb.js',
     './js/restaurant_info.js',
-    './restaurant.html',
     './img//big-star1.png'
 ]
 

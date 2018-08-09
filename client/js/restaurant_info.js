@@ -1,6 +1,6 @@
 let restaurant;
 var map;
-var reviews =[]
+// var reviews =[]
 
 /**
  * Initialize Google map, called from HTML.
@@ -56,17 +56,14 @@ fetchRestaurantFromURL = (callback) => {
 
 fetchReviews = () => {
   const id = getParameterByName('id');
-  console.log(id);
   DBHelper.getRev(id,(error, totalReviews) => {
     if (error) {
       console.log(error);
     } else {
-      self.totalReviews = totalReviews;
-      totalReviews.map(r => {
-        reviews.push(r);
+      totalReviews.map(review => {
+        createReviewHTML(review);
       })
-      console.log(reviews)
-      fillReviewsHTML(reviews);
+      overviewHtml(totalReviews);  
     }
   })
 }
@@ -74,7 +71,7 @@ fetchReviews = () => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
-  overviewHtml()  
+  
 
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
@@ -118,31 +115,13 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
-/**
- * Create all reviews HTML and add them to the webpage.
- */
-fillReviewsHTML = (reviews) => {
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
-}
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
+  console.log(review)
+  const ul = document.getElementById('reviews-list')
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
@@ -169,7 +148,7 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
-  return li;
+  ul.append(li);
 }
 
 /**
@@ -198,13 +177,13 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-overviewHtml = () => {
+overviewHtml = (reviews) => {
   const overview = document.getElementById('overviews');
 
   let totalrating = 0;
-  for (var i = 0; i < reviews.length;i++) {
-    totalrating += parseInt(reviews[i].rating);
-  }
+  reviews.map(review => {
+    totalrating += parseInt(review.rating)
+  })
   let avRating = (totalrating/reviews.length).toFixed(1); 
   const productRating = document.createElement('div');
   const rating = document.createElement('span');
@@ -258,3 +237,4 @@ submitRequestComment = (data) => {
   })
   console.log(reviews)
 }
+

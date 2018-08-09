@@ -159,7 +159,10 @@
     }
     var form = document.querySelector('form');
     form.addEventListener('submit', (e)=>{
+      e.preventDefault()
       submitComment()
+      fetchReviews();
+      //location.reload();
     })
   </script>
 
