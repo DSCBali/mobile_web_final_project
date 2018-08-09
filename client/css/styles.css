@@ -291,6 +291,120 @@ nav h1 a {
   color: #666;
 }
 
+#restaurant-form {
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 5%;
+  padding-bottom: 3%;
+}
+
+#restaurant-form h1 {
+  color: #f18200;
+  font-family: Arial, sans-serif;
+  font-size: 20pt;
+  font-weight: 200;
+  letter-spacing: 0;
+  margin: 2% 0;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+#restaurant-form label {
+  display: block;
+  font-size: 13pt;
+  font-weight: bold;
+}
+
+#restaurant-form input {
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  display: block;
+}
+
+#restaurant-form textarea {
+  width: 90%;
+  min-height: 176px;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+  display: block;
+}
+
+#restaurant-form button {
+  background-color: #ffa500bf;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11pt;
+  transition: background-color 0.5s ease;
+}
+
+#restaurant-form button:hover {
+  background-color: #ffa500;
+}
+
+#restaurant-form fieldset {
+  border: none;
+}
+
+#restaurant-form .rating {
+  float: left;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+#restaurant-form .rating:not(:checked) > input {
+  position: absolute;
+  left: -9999px;
+  clip: rect(0, 0, 0, 0);
+}
+
+#restaurant-form .rating:not(:checked) > label {
+  float: right;
+  width: 20pt;
+  padding: 0 0.1em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 200%;
+  line-height: 1.2;
+  color: black;
+}
+
+#restaurant-form .rating:not(:checked) > label:before {
+  content: '☆ ';
+}
+
+#restaurant-form .rating > input:checked ~ label:before {
+  content: '★ ';
+}
+
+#restaurant-form .rating:not(:checked) > label:hover,
+#restaurant-form .rating:not(:checked) > label:hover ~ label:before {
+  content: '★ ';
+}
+
+#restaurant-form .rating > label:active {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+
 @media screen and (min-width: 600px) and (max-width: 899px) {
   #restaurants-list li {
     width: calc(100% / 3);
@@ -318,6 +432,12 @@ nav h1 a {
   }
   #img-and-cuisine {
     max-width: 400px;
+  }
+  #restaurant-form textarea {
+    width: 55%;
+  }
+  #restaurant-form input {
+    width: 30%;
   }
 }
 @media screen and (min-width: 1200px) {

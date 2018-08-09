@@ -219,3 +219,20 @@ const addData = () => {
     return tx.complete;
   });
 };
+
+document.getElementById('reviewForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const val = e.target;
+  if (val.rating.value === '') {
+    alert('Rating must be provided');
+  }
+  console.log('name', val.name.value);
+  console.log('stars', val.rating.value);
+  console.log('review', val.review.value);
+  val.name.value = '';
+  val.rating.value = '';
+  val.review.value = '';
+  val.rating.forEach(n => {
+    n.checked = false;
+  });
+});

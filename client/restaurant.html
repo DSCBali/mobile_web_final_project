@@ -52,6 +52,31 @@
       </div>
     </section>
     <!-- end restaurant -->
+    <!-- Begin review container -->
+    <section id="restaurant-form">
+      <h1>Write Review</h1>
+      <form id="reviewForm">
+        <label for="name" Name>Name</label>
+        <input type="text" name="name" placeholder="Your name" required />
+        <label for="stars">Stars</label>
+        <fieldset class="rating">
+          <input type="radio" id="star5" name="rating" value="5" />
+          <label for="star5" title="5 Stars"></label>
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" title="4 Stars"></label>
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" title="3 Stars"></label>
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" title="2 Stars"></label>
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" title="1 Star"></label>
+        </fieldset>
+        <label for="review" style="clear: both;">Review</label>
+        <textarea name="review" placeholder="Your review" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+    <!-- end review container -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
