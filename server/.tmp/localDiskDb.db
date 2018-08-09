@@ -539,6 +539,24 @@
         "createdAt": "2018-08-09T08:53:19.307Z",
         "updatedAt": "2018-08-09T08:53:19.307Z",
         "id": 40
+      },
+      {
+        "restaurant_id": "1",
+        "name": "nawa",
+        "rating": "4",
+        "comments": "aripurna",
+        "createdAt": "2018-08-09T09:03:59.106Z",
+        "updatedAt": "2018-08-09T09:03:59.106Z",
+        "id": 41
+      },
+      {
+        "restaurant_id": "1",
+        "name": "dharma",
+        "rating": "5",
+        "comments": "sastra",
+        "createdAt": "2018-08-09T09:06:10.680Z",
+        "updatedAt": "2018-08-09T09:06:10.680Z",
+        "id": 42
       }
     ]
   },
@@ -594,7 +612,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 40
+      "id": 42
     }
   }
 }

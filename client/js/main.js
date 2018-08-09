@@ -11,7 +11,6 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
-  fetchReviews();
 
 });
 /**
@@ -26,21 +25,6 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
-}
-/**
- * fetch all reviews
- */
-fetchReviews = () => {
-  DBHelper.fetchReviews((error, reviews) => {
-    if (error) {
-      console.log(error);
-    } else {
-      self.reviews = reviews;
-      reviews.map(r => {
-        totalR.push(r);
-      })
-    }
-  })
 }
 
 /**
