@@ -56,7 +56,8 @@ fetchRestaurantFromURL = (callback) => {
 
 fetchReviews = () => {
   const id = getParameterByName('id');
-  DBHelper.fetchReviewByRestaurantId(id,(error, totalReviews) => {
+  console.log(id);
+  DBHelper.getRev(id,(error, totalReviews) => {
     if (error) {
       console.log(error);
     } else {
@@ -64,6 +65,7 @@ fetchReviews = () => {
       totalReviews.map(r => {
         reviews.push(r);
       })
+      console.log(reviews)
       fillReviewsHTML(reviews);
     }
   })
@@ -124,7 +126,6 @@ fillReviewsHTML = (reviews) => {
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
-  console.log(reviews)
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -232,4 +233,28 @@ overviewHtml = () => {
     document.getElementById(`bar-stars-n${i}`).innerHTML = Math.round(((reviews.filter(r => r.rating == i).length)/reviewlength)*100) + ' %';
   }
   overview.append(productRating)
+}
+submitComment = () => {
+  const data = {};
+  const restaurant_id  = getParameterByName('id');
+  const fieldRating = document.getElementById('rating').value;
+  const FieldName = document.getElementById('rev-name').value;
+  const fieldComment = document.getElementById('rev-comments').value;
+  data.restaurant_id = restaurant_id;
+  data.name = FieldName;
+  data.rating = fieldRating;
+  data.comments = fieldComment;
+  let json = JSON.stringify(data);  
+  self.data = json;
+  submitRequestComment(json);
+}
+submitRequestComment = (data) => {
+  DBHelper.postReview(data, (error, review)=>{
+    if(error) {
+      console.error(error)
+    }else {
+      reviews.push(review);
+    }
+  })
+  console.log(reviews)
 }

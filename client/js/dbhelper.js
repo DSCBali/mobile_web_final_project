@@ -81,6 +81,7 @@ class DBHelper {
       }else {
         const results = reviews.filter(r => r.restaurant_id == restaurant_id);
         if(results) {
+          console.log(results);
           callback(null, results);
         }else{
           callback('No Reviews yet!', null);
@@ -206,5 +207,40 @@ class DBHelper {
     );
     return marker;
   }
+  /**
+  * create new review
+  */
+  static postReview(data,callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST',DBHelper.REVIEWS_URL,true);
+    xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xhr.onload = () => {
+      var result = JSON.parse(xhr.responseText);
+      if (xhr.readyState == 4 && xhr.status == "201") {
+        callback(null,result )
+      } else {
+        callback(error,null)
+      }
+    };
+    xhr.send(data);
+  }
+
+  static getRev(id, callback){
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', `${DBHelper.REVIEWS_URL}?restaurant_id=${id}`);
+    xhr.onload = () => {
+      if(xhr.status == 200){
+        let json = JSON.parse(xhr.responseText);
+        const result = json;
+        callback(null, result);
+      }else {
+        const error = (`Request failed. Return status of ${xhr.status}`);
+        callback(error, null);
+      }
+    }
+    xhr.send();
+  }
+  
 
 }
+ 
