@@ -147,7 +147,7 @@ nav h1 a {
   letter-spacing: 0;
   margin: 10px;
   padding: 0 10px;
-  width: 42%;
+  width: 17%;
 }
 
 /* ====================== Restaurant Listing ====================== */
@@ -171,7 +171,7 @@ nav h1 a {
   min-height: 380px;
   padding: 15px 20px 0px 20px;
   text-align: left;
-  width: 100%;
+  width: calc(100% / 7);
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
@@ -214,7 +214,7 @@ nav h1 a {
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
-  margin: 5% 0 3%;
+  margin: 3% 0 2%;
   text-transform: uppercase;
   line-height: 1.1;
 }
@@ -276,13 +276,11 @@ nav h1 a {
   border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
-  /* margin: 0 6% 3%; */
-  margin: 0 0 3%;
   overflow: hidden;
   padding: 20px;
   position: relative;
-  /* width: calc(100% / 2.9); */
-  width: 100%;
+  margin: 0 1% 3%;
+  width: calc(100% / 3.5);
 }
 #reviews-list li p {
   margin: 0 0 10px;
@@ -405,7 +403,27 @@ nav h1 a {
   left: 2px;
 }
 
-@media screen and (min-width: 600px) and (max-width: 899px) {
+@media screen and (max-width: 600px) {
+  #reviews-list li {
+    margin: 0 0 3%;
+    width: 100%;
+  }
+  #restaurant-name {
+    margin: 5% 0 3%;
+  }
+  #restaurants-list li {
+    width: 100%;
+  }
+  .filter-options select {
+    width: 42%;
+  }
+}
+@media screen and (min-width: 601px) and (max-width: 899px) {
+  #img-and-cuisine {
+    width: 40%;
+  }
+}
+@media screen and (min-width: 601px) and (max-width: 959px) {
   #restaurants-list li {
     width: calc(100% / 3);
   }
@@ -414,12 +432,10 @@ nav h1 a {
   }
   #reviews-list li {
     margin: 0 0 3%;
-  }
-  #img-and-cuisine {
-    width: 40%;
+    width: 41%;
   }
 }
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 960px) and (max-width: 1199px) {
   #restaurants-list li {
     width: calc(100% / 4);
   }
@@ -440,7 +456,7 @@ nav h1 a {
     width: 30%;
   }
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1200px) and (max-width: 1799px) {
   #restaurants-list li {
     width: calc(100% / 6);
   }
@@ -450,20 +466,5 @@ nav h1 a {
   #reviews-list li {
     margin: 0 1% 3%;
     width: calc(100% / 2.3);
-  }
-}
-@media screen and (min-width: 1800px) {
-  #restaurants-list li {
-    width: calc(100% / 7);
-  }
-  .filter-options select {
-    width: 17%;
-  }
-  #reviews-list li {
-    margin: 0 1% 3%;
-    width: calc(100% / 3.5);
-  }
-  #restaurant-name {
-    margin: 3% 0 2%;
   }
 }
