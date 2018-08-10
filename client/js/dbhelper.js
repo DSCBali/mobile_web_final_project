@@ -17,9 +17,14 @@ class DBHelper {
     * IndexedDB Storage Object
     */
   static createDatabase() {
-    return idb.open('dbRestaurants', 1, function(db) {
-      const store = db.createObjectStore('restaurants', {keyPath: 'id'});
-      store.createIndex('orderby-date', 'updatedAt');
+    return idb.open('dbRestaurants', 2, function(db) {
+      switch(db.oldVersion){
+        case 0:
+          const store = db.createObjectStore('restaurants', {keyPath: 'id'});
+          store.createIndex('orderby-date', 'updatedAt');
+        case 1:
+          db.createObjectStore('restaurantReviews', {keyPath: 'id'});
+      }
     });
   }
 
@@ -38,6 +43,19 @@ class DBHelper {
       });
 
       store.index('orderby-date');
+    })
+  }
+
+  static insertReviews(reviews) {
+    DBHelper.createDatabase().then(db => {
+      if(!db) return;
+
+      const tx = db.transaction('restaurantReviews', 'readwrite');
+      const store = tx.objectStore('restaurantReviews');
+
+      reviews.forEach(review => {
+        store.put(review);
+      });
     })
   }
 
@@ -81,6 +99,18 @@ class DBHelper {
     })
   }
 
+  static fetchReviewsRestaurantFromDB(){
+    return DBHelper.createDatabase().then(db => {
+      if(!db) return;
+
+      const restaurantReviews = db.transaction('restaurantReviews').objectStore('restaurantReviews');
+
+      return restaurantReviews.getAll().then(reviews => {
+        return reviews;
+      })
+    })
+  }
+
   /**
    * Fetch restaurants from server.
    */
@@ -111,6 +141,22 @@ class DBHelper {
       console.log('You are offline, fetching from DB');
       return DBHelper.fetchRestaurantFromDB(id);
     });
+  }
+
+  /**
+   * Fetch reviews of restaurant from server.
+   */
+  static fetchRestaurantReviewsFromServer(id){
+    return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`, {
+      method: 'GET'
+    })
+    .then(function(result) {
+      return result.json();
+    })
+    .catch(function(err) {
+      console.log('You are offline, fetching from DB');
+      return DBHelper.fetchReviewsRestaurantFromDB();
+    })
   }
 
   /**

@@ -5,6 +5,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
 });
 
+window.initMap = () => {
+};
+
+const writeToIndexedDB = (restaurant) => {
+  DBHelper.fetchRestaurantReviewsFromServer(restaurant.id)
+  .then(function(reviews) {
+    DBHelper.insertReviews(reviews);
+  })
+  .catch(function(err) {
+    console.log(err);
+  })
+ }
+
 /**
  * Get current restaurant from page URL.
  */
@@ -26,17 +39,26 @@ fetchRestaurantFromURL = () => {
         return;
       }
 
-      //fill reviews
-      fetch(`http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`)
-      .then((response) => response.json())
-      .then(fillReviewsHTML)
-      .catch(function(err){
-        return console.log(err)
-      })
+      // //fill reviews
+      // fetch(`http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`)
+      // .then((response) => response.json())
+      // .then(fillReviewsHTML)
+      // .catch(function(err){
+      //   return console.log(err)
+      // })
 
       return restaurant;
     })
     .then(fillRestaurantHTML)
+    .then(function(restaurant) {
+      DBHelper.fetchRestaurantReviewsFromServer(restaurant.id)
+      .then(fillReviewsHTML)
+      .catch(function(err){
+        console.log(err);
+      })
+      return restaurant;
+    })
+    .then(writeToIndexedDB)
     .catch(function(err){
       console.log(err);
       return null;
@@ -123,6 +145,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   fillBreadcrumb();
 
   DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+
+  return restaurant;
 }
 
 /**
