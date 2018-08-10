@@ -1,6 +1,7 @@
-const staticCacheName = 'restaurant-review-cache-v1';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v2';
-const allCaches = [staticCacheName, staticRestaurantImageCacheName];
+const staticCacheName = 'restaurant-review-cache-v3';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v3';
+const staticGoogleMapsAPICache = 'restaurant-review-cache-maps-v1';
+const allCaches = [staticCacheName, staticRestaurantImageCacheName, staticGoogleMapsAPICache];
 
 //install service worker
 self.addEventListener('install', event => {
@@ -43,63 +44,58 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const requestUrl = new URL(event.request.url);
+
+  if(event.request.url.indexOf('maps.googleapis.com/maps/api/') > -1){
+    event.respondWith(serveMapsAPI(event.request));
+    return;
+  }
+
   if (requestUrl.pathname.startsWith('/img/')) {
     event.respondWith(servePhoto(event.request));
     return;
   }
 
-   event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
+ event.respondWith(
+  caches.match(event.request)
+    .then(function(response) {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
 
-        // IMPORTANT: Clone the request. A request is a stream and
-        // can only be consumed once. Since we are consuming this
-        // once by cache and once by the browser for fetch, we need
-        // to clone the response.
-        let fetchRequest = event.request.clone();
+      // IMPORTANT: Clone the request. A request is a stream and
+      // can only be consumed once. Since we are consuming this
+      // once by cache and once by the browser for fetch, we need
+      // to clone the response.
+      let fetchRequest = event.request.clone();
 
-        return fetch(fetchRequest).then(
-          function(response) {
-            // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // IMPORTANT: Clone the response. A response is a stream
-            // and because we want the browser to consume the response
-            // as well as the cache consuming the response, we need
-            // to clone it so we have two streams.
-            let responseToCache = response.clone();
-
-            caches.open(staticCacheName)
-              .then(function(cache) {
-                cache.put(event.request, responseToCache);
-              });
-
+      return fetch(fetchRequest).then(
+        function(response) {
+          // Check if we received a valid response
+          if(!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
-        );
-      })
-    );
 
-  // event.respondWith(
-  //   caches.open('staticCacheName').then(function(cache) {
-  //     return cache.match(event.request).then(function (response) {
-  //       return response || fetch(event.request).then(function(response) {
-  //         cache.put(event.request, response.clone());
-  //         return response;
-  //       });
-  //     });
-  //   })
-  // );
+          // IMPORTANT: Clone the response. A response is a stream
+          // and because we want the browser to consume the response
+          // as well as the cache consuming the response, we need
+          // to clone it so we have two streams.
+          let responseToCache = response.clone();
+
+          caches.open(staticCacheName)
+            .then(function(cache) {
+              cache.put(event.request, responseToCache);
+            });
+
+          return response;
+        }
+      );
+    })
+  );
 });
 
 const servePhoto = request => {
-  const storageUrl = request.url.replace(/-\d+px\.jpg|webp$/, ''); //https://stackoverflow.com/a/15986439
+  const storageUrl = request.url.replace(/-\d+px\.jpg|webp$/, '');
 
   return caches.open(staticRestaurantImageCacheName).then(cache => {
     return cache.match(storageUrl).then(response => {
@@ -107,6 +103,21 @@ const servePhoto = request => {
 
       return fetch(request).then(networkResponse => {
         cache.put(storageUrl, networkResponse.clone());
+        return networkResponse;
+      });
+    });
+  });
+};
+
+const serveMapsAPI = request => {
+  const url = request.url;
+
+  return caches.open(staticGoogleMapsAPICache).then(cache => {
+    return cache.match(url).then(response => {
+      if (response) return response;
+
+      return fetch(request).then(networkResponse => {
+        cache.put(url, networkResponse.clone());
         return networkResponse;
       });
     });
