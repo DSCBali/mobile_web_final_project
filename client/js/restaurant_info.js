@@ -1,5 +1,7 @@
 let restaurant;
 var map;
+const dbName = 'restaurant';
+const version = 2;
 // var reviews =[]
 
 /**
@@ -7,6 +9,8 @@ var map;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchReviews();
+  createDB(dbName, version);
+
 });
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
@@ -72,7 +76,6 @@ fetchReviews = () => {
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   
-
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -120,7 +123,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-  console.log(review)
   const ul = document.getElementById('reviews-list')
   const li = document.createElement('li');
   const name = document.createElement('p');
@@ -149,6 +151,7 @@ createReviewHTML = (review) => {
   li.appendChild(comments);
 
   ul.append(li);
+  insertData('reviews',review);
 }
 
 /**
@@ -182,7 +185,11 @@ overviewHtml = (reviews) => {
 
   let totalrating = 0;
   reviews.map(review => {
-    totalrating += parseInt(review.rating)
+    if (review.rating) {
+      totalrating += parseInt(review.rating)
+    }else {
+      totalrating += 0;
+    }
   })
   let avRating = (totalrating/reviews.length).toFixed(1); 
   const productRating = document.createElement('div');
@@ -193,12 +200,13 @@ overviewHtml = (reviews) => {
   ratingStar.setAttribute('class', 'rating_star');
   rating.append(ratingStar);
   productRating.append(rating);
+  
   ratingStar.style.width = (avRating/5)*100 + "%";
   const numRev = document.createElement('span');
   numRev.innerHTML ='  ' + reviews.length + ' reviews';
   productRating.append(numRev);
-  
-  let criteria;
+
+  let criteria = 'No Reviews yet!';
   let goods = ['<h3>Gerbage</h3>','<h3>Stone</h3>','<h3>Bronze</h3>','<h3>Silver</h3>','<h3>Gold</h3>']
   if(parseInt(avRating)!=0){
     criteria = goods[Math.round(avRating)-1]
@@ -228,13 +236,30 @@ submitComment = () => {
   submitRequestComment(json);
 }
 submitRequestComment = (data) => {
-  DBHelper.postReview(data, (error, review)=>{
+  DBHelper.postReview(data, (error, data)=>{
     if(error) {
-      console.error(error)
+      console.error('Error occured while saving data [error] :',error)
     }else {
-      reviews.push(review);
+      createReviewHTML(data)
+      updateOverview()
     }
   })
-  console.log(reviews)
 }
-
+updateOverview =()=> {
+  const id = getParameterByName('id');
+  DBHelper.getRev(id, (error, reviews) => {
+    if(error){
+      console.error(error);
+    }else{
+      overviewHtml(reviews)
+    }
+  })
+}
+createDB = (dbName, version) => {
+  IndexedDB.initDB(dbName,version)
+  .then(function(db){
+  });
+}
+insertData = (sceme, data) => {
+  IndexedDB.insertDB(dbName,version,sceme,data);
+}

@@ -1,6 +1,6 @@
 importScripts('./js/cache-polyfill.js');
 
-const cacheName = 'v5';
+const cacheName = 'v8';
 
 const files = [
     './',
@@ -8,8 +8,10 @@ const files = [
     './js/main.js',
     './js/dbhelper.js',
     './js/idb.js',
+    './restaurant.html',
     './js/restaurant_info.js',
-    './img//big-star1.png'
+    './img//big-star1.png',
+    'https://maps.googleapis.com/maps/api/js/QuotaService.RecordEvent?1shttp%3A%2F%2Flocalhost%3A5000%2Frestaurant%3Fid%3D1&3sAIzaSyBDWVakzxJSRtpMhMzaX8tt9b2vHc38cpE&7soo6ns1&10e1&callback=_xdc_._lwimsd&key=AIzaSyBDWVakzxJSRtpMhMzaX8tt9b2vHc38cpE&token=50502'
 ]
 
 /**
@@ -42,28 +44,27 @@ self.addEventListener('install', (event) => {
 
  self.addEventListener('fetch', (event) => {
      console.log('[SW] Event : Fetch');
-
      const request = event.request;
-
      event.respondWith(
-         caches.match(request).then((response) => {
-            if (response) {
-                return response;
-            }
-
-            return fetch(request).then((response) => {
-                let responseToCache = response.clone();
-                caches.open(cacheName).then((cache) => {
-                    cache.put(request, responseToCache)
-                    .catch((err) => {
-                        console.warn(request.url + ': ' + err.message);
-                    })
+        caches.match(request).then((response) => {
+           if (response) {
+               return response;
+           }
+           return fetch(request).then((response) => {
+            let responseToCache = response.clone();
+            caches.open(cacheName).then((cache) => {
+                cache.put(request, responseToCache)
+                .catch((err) => {
+                    console.warn(request.url + ': ' + err.message);
                 })
-
-                return response;
             })
-         })
-     )
+    
+            return response;
+        })
+           
+        })
+    )
+     
  })
 
  /**
@@ -93,3 +94,10 @@ self.addEventListener('activate', (event) => {
     )
     
 })
+/**
+ * Backgound SYNC at least i'm trying 
+ */
+
+ self.addEventListener('sync', (event) => {
+     console.log('[SW] Event: Sync')
+ })

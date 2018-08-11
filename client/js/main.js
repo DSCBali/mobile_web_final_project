@@ -3,6 +3,8 @@ let restaurants,
   cuisines,reviews
 var map
 var markers = []
+const dbName = 'restaurant';
+const version = 2;
 
 
 /**
@@ -11,6 +13,7 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  createDB(dbName, version);
 
 });
 /**
@@ -135,6 +138,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
+  
 }
 
 /**
@@ -174,7 +178,13 @@ createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
+
+  const scheme = 'restaurants';
+  const data = restaurant;
+  insertData(scheme,data)
   return li
+
+  
 }
 
 /**
@@ -211,13 +221,12 @@ createRating = (id) => {
     numRev.innerHTML ='  ' + reviews.length + ' reviews';
     productRating.append(numRev);
   })
-
-
-
-
-
-  
-   
-  
-  
+}
+createDB = (dbName, version) => {
+  IndexedDB.initDB(dbName,version)
+  .then(function(db){
+  });
+}
+insertData = (sceme, data) => {
+  IndexedDB.insertDB(dbName,version,sceme,data);
 }

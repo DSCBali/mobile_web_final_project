@@ -240,7 +240,5 @@ class DBHelper {
     }
     xhr.send();
   }
-  
-
 }
  

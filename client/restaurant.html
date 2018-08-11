@@ -87,6 +87,7 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
+      <h2>Reviews</h2>
       <ul id="reviews-list"></ul>
       <form action="" method="POST" enctype="multipart/form-data" id="create-comment">
         <h2>Create Comment</h2>
@@ -138,11 +139,14 @@
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script src="js/init.js"></script>
+  <script src="js/indexeddb.js"></script>
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDWVakzxJSRtpMhMzaX8tt9b2vHc38cpE&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
   <script>
+    const FieldName = document.getElementById('rev-name');
+    const fieldComment = document.getElementById('rev-comments');
     var polystars = document.querySelectorAll('.polystar')
     var rating = document.querySelector('#rating')
     function clickedStar(data) {
@@ -157,12 +161,18 @@
       }
       rating.value = i;      
     }
+    function resetPage(){
+      clickedStar(0)
+      FieldName.value = "";
+      fieldComment.value = "";
+    }
     var form = document.querySelector('form');
     form.addEventListener('submit', (e)=>{
       e.preventDefault()
       submitComment()
-      fetchReviews();
-      //location.reload();
+      console.log("submit");
+      resetPage()
+      updateOverview()
     })
   </script>
 
