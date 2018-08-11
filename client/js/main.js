@@ -162,8 +162,31 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
+
+  googleMapsAPIChecker();
   updateRestaurants();
 }
+
+
+const googleMapsAPIChecker = () => {
+  let googleMapsLoaded = false;
+
+  /* listen to the tilesloaded event
+  if that is triggered, google maps is loaded successfully for sure */
+  google.maps.event.addListener(map, 'tilesloaded', function() {
+     googleMapsLoaded = true;
+     //clear the listener, we only need it once
+     google.maps.event.clearListeners(map, 'tilesloaded');
+  });
+
+  /* a delayed check to see if google maps was ever loaded */
+  setTimeout(function() {
+    if (!googleMapsLoaded) {
+       //we have waited 3 secs, google maps is not loaded yet
+       document.getElementById('map').style.display = 'none';
+    }    
+  }, 3000); 
+} 
 
 /**
  * Update page and map for current restaurants.

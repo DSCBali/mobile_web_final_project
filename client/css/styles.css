@@ -273,7 +273,7 @@ nav h1 a {
   padding-top: 110px;
 }
 .inside #map-container {
-  background: blue none repeat scroll 0 0;
+  background: transparent;
   height: 87%;
   position: fixed;
   right: 0;

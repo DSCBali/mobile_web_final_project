@@ -1,7 +1,7 @@
-const staticCacheName = 'restaurant-review-cache-v3';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v3';
-const staticGoogleMapsAPICache = 'restaurant-review-cache-maps-v1';
-const allCaches = [staticCacheName, staticRestaurantImageCacheName, staticGoogleMapsAPICache];
+const staticCacheName = 'restaurant-review-cache-v4';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v4';
+// const staticGoogleMapsAPICache = 'restaurant-review-cache-maps-v1';
+const allCaches = [staticCacheName, staticRestaurantImageCacheName];
 
 //install service worker
 self.addEventListener('install', event => {
@@ -45,10 +45,10 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const requestUrl = new URL(event.request.url);
 
-  if(event.request.url.indexOf('maps.googleapis.com/maps/api/') > -1){
-    event.respondWith(serveMapsAPI(event.request));
-    return;
-  }
+  // if(event.request.url.indexOf('maps.googleapis.com/maps/api/') > -1){
+  //   event.respondWith(serveMapsAPI(event.request));
+  //   return;
+  // }
 
   if (requestUrl.pathname.startsWith('/img/')) {
     event.respondWith(servePhoto(event.request));
@@ -103,21 +103,6 @@ const servePhoto = request => {
 
       return fetch(request).then(networkResponse => {
         cache.put(storageUrl, networkResponse.clone());
-        return networkResponse;
-      });
-    });
-  });
-};
-
-const serveMapsAPI = request => {
-  const url = request.url;
-
-  return caches.open(staticGoogleMapsAPICache).then(cache => {
-    return cache.match(url).then(response => {
-      if (response) return response;
-
-      return fetch(request).then(networkResponse => {
-        cache.put(url, networkResponse.clone());
         return networkResponse;
       });
     });

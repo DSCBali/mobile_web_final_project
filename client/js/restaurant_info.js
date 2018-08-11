@@ -5,13 +5,42 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
 });
 
-window.initMap = () => {
+window.initMap = (restaurant) => {
+  self.map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 16,
+    center: restaurant.latlng,
+    scrollwheel: false
+  });
+
+  googleMapsAPIChecker();
+  DBHelper.mapMarkerForRestaurant(restaurant, self.map);
 };
+
+const googleMapsAPIChecker = () => {
+  let googleMapsLoaded = false;
+
+  /* listen to the tilesloaded event
+  if that is triggered, google maps is loaded successfully for sure */
+  google.maps.event.addListener(map, 'tilesloaded', function() {
+     googleMapsLoaded = true;
+     //clear the listener, we only need it once
+     google.maps.event.clearListeners(map, 'tilesloaded');
+  });
+
+  /* a delayed check to see if google maps was ever loaded */
+  setTimeout(function() {
+    if (!googleMapsLoaded) {
+       //we have waited 3 secs, google maps is not loaded yet
+       document.getElementById('map').style.display = 'none';
+    }    
+  }, 3000); 
+} 
 
 const writeToIndexedDB = (restaurant) => {
   DBHelper.fetchRestaurantReviewsFromServer(restaurant.id)
   .then(function(reviews) {
     DBHelper.insertReviews(reviews);
+    return restaurant;
   })
   .catch(function(err) {
     console.log(err);
@@ -39,14 +68,6 @@ fetchRestaurantFromURL = () => {
         return;
       }
 
-      // //fill reviews
-      // fetch(`http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`)
-      // .then((response) => response.json())
-      // .then(fillReviewsHTML)
-      // .catch(function(err){
-      //   return console.log(err)
-      // })
-
       return restaurant;
     })
     .then(fillRestaurantHTML)
@@ -58,6 +79,7 @@ fetchRestaurantFromURL = () => {
       })
       return restaurant;
     })
+    .then(window.initMap)
     .then(writeToIndexedDB)
     .catch(function(err){
       console.log(err);
@@ -65,37 +87,6 @@ fetchRestaurantFromURL = () => {
     })
   }
 }
-// fetchRestaurantFromURL = (callback) => {
-//   if (self.restaurant) { // restaurant already fetched!
-//     callback(null, self.restaurant)
-//     return;
-//   }
-//   const id = getParameterByName('id');
-//   if (!id) { // no id found in URL
-//     error = 'No restaurant id in URL'
-//     callback(error, null);
-//   } else {
-//     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-//       self.restaurant = restaurant;
-
-//       if (!restaurant) {
-//         console.error(error);
-//         return;
-//       }
-
-//       //fill reviews
-//       fetch(`http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`)
-//       .then((response) => response.json())
-//       .then(fillReviewsHTML)
-//       .catch(function(err){
-//         return console.log(err)
-//       })
-
-//       fillRestaurantHTML();
-//       callback(null, restaurant)
-//     });
-//   }
-// }
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -136,15 +127,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
 
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 16,
-    center: restaurant.latlng,
-    scrollwheel: false
-  });
-
   fillBreadcrumb();
-
-  DBHelper.mapMarkerForRestaurant(restaurant, self.map);
 
   return restaurant;
 }
