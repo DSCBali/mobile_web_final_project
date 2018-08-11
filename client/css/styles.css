@@ -218,7 +218,7 @@ nav h1 a {
   text-transform: uppercase;
   line-height: 1.1;
 }
-#restaurant-img {
+.restaurant-img {
   width: 97%;
   max-width: 400px;
 }
