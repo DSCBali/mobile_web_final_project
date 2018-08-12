@@ -45,7 +45,6 @@ self.addEventListener('install', event => {
         ...urlsJS,
         ...urlsCSS,  
         ...urlsImg,
-        ...urlsApi
     ];
 
     event.waitUntil(

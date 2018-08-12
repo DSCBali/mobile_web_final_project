@@ -54,10 +54,13 @@ class DBHelper {
         DBHelper.storeRestaurantsToDB(restaurants);
 
         callback(null, restaurants);
-      }, error => {
-        const message = (`Request failed. Returned status of ${error.status}`);
-
-        callback(message, null);
+      }, () => {
+        DBHelper.fetchRestaurantsFromDB()
+          .then(restaurants => {
+            callback(null, restaurants);
+          }, error => {
+            callback(error, null);
+          });
       });
   }
 
@@ -74,13 +77,17 @@ class DBHelper {
   static fetchRestaurantById(id, callback) {
     DBHelper.fetchRestaurantByIdFromNetwork(id)
       .then(restaurant => {
+        console.log(2);
         DBHelper.storeRestaurantToDB(restaurant);
 
         callback(null, restaurant);
-      }, error => {
-        const message = (`Request failed. Returned status of ${error.status}`);
-
-        callback(message, null);
+      }, () => {
+        DBHelper.fetchRestaurantByIdFromDB(id)
+          .then(restaurant => {
+            callback(null, restaurant);
+          }, error => {
+            callback(error, null);
+          });
       });
   }
 
@@ -88,7 +95,8 @@ class DBHelper {
    * Fetch restaurant by id from network
    */
   static fetchRestaurantByIdFromNetwork(id) {
-    return fetch(DBHelper.DATABASE_URL + id).then(response => response.json());
+    return fetch(DBHelper.DATABASE_URL + id)
+      .then(response => response.json());
   }
 
   /**
@@ -100,10 +108,17 @@ class DBHelper {
         DBHelper.storeRestaurantReviewsToDB(reviews);
 
         callback(null, reviews);
-      }, error => {
-        const message = (`Request failed. Returned status of ${error.status}`);
+      }, () => {
+        DBHelper.fetchRestaurantReviewsFromDB()
+          .then(reviews => {
+            reviews = reviews.filter(item => {
+              return item.restaurant_id === id
+            });
 
-        callback(message, null);
+            callback(null, reviews);
+          }, error => {
+            callback(error, null);
+          });
       });
   }
 
@@ -311,5 +326,56 @@ class DBHelper {
       })
       .then(() => console.log('Added a restaurant reviews data to IndexedDB'))
       .catch(error => console.log('Failed to store a restaurant reviews into DB', error));
+  }
+
+  /**
+   * Fetch restaurants from DB
+   */
+  static fetchRestaurantsFromDB() {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('restaurants', 'readonly');
+        const store = trx.objectStore('restaurants');
+
+        return store.getAll();
+      }, error => {
+        return error;
+      });
+  }
+
+  /**
+   * Fetch a restaurant from DB
+   */
+  static fetchRestaurantByIdFromDB(id) {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('restaurants', 'readonly');
+        const store = trx.objectStore('restaurants');
+        
+        return store.get(parseInt(id));
+      }, error => {
+        return error;
+      });
+  }
+
+  /**
+   * Fetch a restaurant reviews from DB
+   */
+  static fetchRestaurantReviewsFromDB() {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews', 'readonly');
+        const store = trx.objectStore('reviews');
+        
+        return store.getAll();
+      }, error => {
+        return error;
+      });
   }
 }
