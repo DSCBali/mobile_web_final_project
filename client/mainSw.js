@@ -1,6 +1,5 @@
-const staticCacheName = 'restaurant-review-cache-v4';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v4';
-// const staticGoogleMapsAPICache = 'restaurant-review-cache-maps-v1';
+const staticCacheName = 'restaurant-review-cache-v5';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v5';
 const allCaches = [staticCacheName, staticRestaurantImageCacheName];
 
 //install service worker
@@ -45,11 +44,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const requestUrl = new URL(event.request.url);
 
-  // if(event.request.url.indexOf('maps.googleapis.com/maps/api/') > -1){
-  //   event.respondWith(serveMapsAPI(event.request));
-  //   return;
-  // }
-
   if (requestUrl.pathname.startsWith('/img/')) {
     event.respondWith(servePhoto(event.request));
     return;
@@ -90,6 +84,26 @@ self.addEventListener('fetch', event => {
           return response;
         }
       );
+    })
+    .catch(function(err){
+      return new Response(`
+        <!DOCTYPE html>
+        <html>
+         <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Home Page</title>
+         </head>
+         <body>
+           <div style="text-align:center; margin-top:40px;">
+             <p>Boo! You don't have an internet connection.</p>
+             <p>Please check your network connection and try again.</p>
+           <div>
+          </body>
+        </html>
+        `, {
+          headers: {'Content-Type': 'text/html'}
+        });
     })
   );
 });
