@@ -476,7 +476,7 @@ label.star {
     transition: all 0.2s;
 }
 input.star:checked~label.star:before {
-    content: '\f005';
+    content:'\2605';
     color: #03DAC5;
     transition: all 0.25s;
 }
@@ -491,6 +491,6 @@ label.star:hover {
     transform: rotate(-15deg) scale(1.3);
 }
 label.star:before {
-    content: '\f006';
+    content:'\2606';
     font-family: FontAwesome;
 } 
