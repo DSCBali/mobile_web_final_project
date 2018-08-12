@@ -135,7 +135,7 @@ const googleMapsAPIChecker = () => {
        //we have waited 3 secs, google maps is not loaded yet
        document.getElementById('map').style.display = 'none';
     }    
-  }, 3000); 
+  }, 5000); 
 } 
 
 /**
