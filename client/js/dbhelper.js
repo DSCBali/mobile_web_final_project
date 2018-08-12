@@ -4,6 +4,38 @@
  * variabel idb is available.
  */
 class DBHelper {
+  /**
+   * Opening a DB
+   */
+  static openDB() {
+    return idb.open('restaurant-reviews', 1, upgradeDB => {
+      if (!'indexedDB' in window) {
+        console.log('This browser doesn\'t support IndexedDB');
+        
+        return;
+      }
+
+      // Setup DBs
+      if (!upgradeDB.objectStoreNames.contains(['restaurants'])) {
+        const restaurants = upgradeDB.createObjectStore('restaurants', { keyPath: 'id', autoIncrement: true });
+
+        restaurants.createIndex('neighborhood', 'neighborhood', {
+          unique: false
+        });
+        restaurants.createIndex('cuisine_type', 'cuisine_type', {
+          unique: false
+        });
+      }
+
+      if (!upgradeDB.objectStoreNames.contains(['reviews'])) {
+        const reviews = upgradeDB.createObjectStore('reviews', { keyPath: 'id', autoIncrement: true });
+
+        reviews.createIndex('restaurant_id', 'restaurant_id', {
+          unique: false
+        });
+      }
+    });
+  }
 
   /**
    * Database URL.
@@ -17,55 +49,69 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json;
+    DBHelper.fetchRestaurantsFromNetwork()
+      .then(restaurants => {
+        DBHelper.storeRestaurantsToDB(restaurants);
+
         callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+      }, error => {
+        const message = (`Request failed. Returned status of ${error.status}`);
+
+        callback(message, null);
+      });
+  }
+
+  /**
+   * Fetch restaurants from network
+   */
+  static fetchRestaurantsFromNetwork() {
+    return fetch(DBHelper.DATABASE_URL).then(response => response.json());
   }
 
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
+    DBHelper.fetchRestaurantByIdFromNetwork(id)
+      .then(restaurant => {
+        DBHelper.storeRestaurantToDB(restaurant);
+
+        callback(null, restaurant);
+      }, error => {
+        const message = (`Request failed. Returned status of ${error.status}`);
+
+        callback(message, null);
+      });
+  }
+
+  /**
+   * Fetch restaurant by id from network
+   */
+  static fetchRestaurantByIdFromNetwork(id) {
+    return fetch(DBHelper.DATABASE_URL + id).then(response => response.json());
   }
 
   /**
    * Fetch restaurants reviews by restaurant id
    */
   static fetchRestaurantReviews(id, callback) {
-    fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
-      .then(res => {
-        res.json().then(function(data) {
-          callback(null, data)
-        });
-      })
-      .catch(err => {
-        let error = (`Request failed. Returned status of ${err.status}`);
+    DBHelper.fetchRestaurantReviewsFromNetwork(id)
+      .then(reviews => {
+        DBHelper.storeRestaurantReviewsToDB(reviews);
 
-        callback(error, null);
+        callback(null, reviews);
+      }, error => {
+        const message = (`Request failed. Returned status of ${error.status}`);
+
+        callback(message, null);
       });
+  }
+
+  /**
+   * Fetch restaurant by id from network
+   */
+  static fetchRestaurantReviewsFromNetwork(id) {
+    return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`).then(response => response.json());
   }
 
   /**
@@ -206,4 +252,64 @@ class DBHelper {
     return marker;
   }
 
+  /**
+   * Store restaurants to DB
+   */
+  static storeRestaurantsToDB(restaurants) {
+    DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('restaurants', 'readwrite');
+        const store = trx.objectStore('restaurants');
+
+        restaurants.forEach(restaurant => {
+          store.put(restaurant);
+        });
+
+        trx.complete;
+      })
+      .then(() => console.log('Added restaurants data to IndexedDB'))
+      .catch(error => console.log('Failed to store restaurants into DB', error));
+  }
+
+  /**
+   * Store a restaurant to DB
+   */
+  static storeRestaurantToDB(restaurant) {
+    DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('restaurants', 'readwrite');
+        const store = trx.objectStore('restaurants');
+
+        store.put(restaurant);
+
+        trx.complete;
+      })
+      .then(() => console.log('Added a restaurant data to IndexedDB'))
+      .catch(error => console.log('Failed to store a restaurant into DB', error));
+  }
+
+  /**
+   * Store a restaurant reviews to DB
+   */
+  static storeRestaurantReviewsToDB(reviews) {
+    DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews', 'readwrite');
+        const store = trx.objectStore('reviews');
+
+        reviews.forEach(review => {
+          store.put(review);
+        });
+
+        trx.complete;
+      })
+      .then(() => console.log('Added a restaurant reviews data to IndexedDB'))
+      .catch(error => console.log('Failed to store a restaurant reviews into DB', error));
+  }
 }
