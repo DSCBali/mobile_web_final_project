@@ -10,7 +10,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants/`;
+    return `http://localhost:${port}`; //change this to your server domain
   }
 
   /**
@@ -127,7 +127,7 @@ class DBHelper {
    * Fetch restaurants from server.
    */
   static fetchRestaurantsFromServer(){
-    return fetch('http://localhost:1337/restaurants/', {
+    return fetch(`${DBHelper.DATABASE_URL}/restaurants/`, {
       method: 'GET'
     })
     .then(response => response.json())
@@ -141,7 +141,7 @@ class DBHelper {
    * Fetch restaurant from server.
    */
   static fetchRestaurantFromServer(id){
-    return fetch(`http://localhost:1337/restaurants/${id}`, {
+    return fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}`, {
       method: 'GET'
     })
     .then(function(result){
@@ -159,7 +159,7 @@ class DBHelper {
    * Fetch reviews of restaurant from server.
    */
   static fetchRestaurantReviewsFromServer(id){
-    return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`, {
+    return fetch(`${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${id}`, {
       method: 'GET'
     })
     .then(function(result) {

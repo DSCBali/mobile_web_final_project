@@ -262,7 +262,7 @@ if(reviewForm) {
     const restaurant_id = getParameterByName('id');
     const form = new FormData(event.target);
 
-    fetch(`http://localhost:1337/reviews`, {
+    fetch(`${DBHelper.DATABASE_URL}/reviews`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

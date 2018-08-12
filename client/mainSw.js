@@ -1,4 +1,4 @@
-importScripts('serviceworker-cache-polyfill.js');
+self.importScripts('serviceworker-cache-polyfill.js', 'js/dbhelper.js');
 
 const staticCacheName = 'restaurant-review-cache-v8';
 const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v8';
@@ -148,7 +148,7 @@ const syncReviews = () => {
        console.log(data);
 
        // Jalankan method fetch (POST) ke server untuk meyimpan ke server.
-       return fetch(`http://localhost:1337/reviews`, {
+       return fetch(`${DBHelper.DATABASE_URL}/reviews`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type' : 'application/json'

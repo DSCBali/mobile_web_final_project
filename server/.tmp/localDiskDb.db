@@ -769,6 +769,24 @@
         "createdAt": "2018-08-12T12:32:10.982Z",
         "updatedAt": "2018-08-12T12:32:10.982Z",
         "id": 67
+      },
+      {
+        "restaurant_id": "5",
+        "name": "test sw",
+        "rating": "3",
+        "comments": "sdadsasadadadada",
+        "createdAt": "2018-08-12T13:11:22.250Z",
+        "updatedAt": "2018-08-12T13:11:22.250Z",
+        "id": 68
+      },
+      {
+        "restaurant_id": "5",
+        "name": "test sw online",
+        "rating": "3",
+        "comments": "asdasdsaddsadsadas",
+        "createdAt": "2018-08-12T13:12:02.803Z",
+        "updatedAt": "2018-08-12T13:12:02.803Z",
+        "id": 69
       }
     ]
   },
@@ -824,7 +842,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 67
+      "id": 69
     }
   }
 }
