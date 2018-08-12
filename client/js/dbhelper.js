@@ -23,7 +23,7 @@ class DBHelper {
           const store = db.createObjectStore('restaurants', {keyPath: 'id'});
           store.createIndex('orderby-date', 'updatedAt');
         case 1:
-          db.createObjectStore('restaurantReviews', {keyPath: 'id'});
+          db.createObjectStore('restaurantReviews');
       }
     });
   }
@@ -54,9 +54,22 @@ class DBHelper {
       const store = tx.objectStore('restaurantReviews');
 
       reviews.forEach(review => {
-        store.put(review);
+        store.put(review, review.id);
       });
     })
+  }
+
+  static insertUnsyncedReview(review){
+    DBHelper.createDatabase().then(db => {
+      if(!db) return;
+
+      const tx = db.transaction('restaurantReviews', 'readwrite');
+      const store = tx.objectStore('restaurantReviews');
+
+      store.put(review, 'needs_sync');
+    })
+
+    return review;
   }
 
   /**
@@ -87,7 +100,6 @@ class DBHelper {
 
      
       return restaurants.getAll().then(results => {
-        console.log(results);
         const restaurant = results.find(r => r.id == id);
         if(restaurant){
           return restaurant;

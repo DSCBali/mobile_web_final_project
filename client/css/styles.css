@@ -492,5 +492,8 @@ label.star:hover {
 }
 label.star:before {
     content:'\2606';
-    font-family: FontAwesome;
+}
+.star-rating-icon:before{
+  content:'\2605';
+  font-style: normal;
 } 

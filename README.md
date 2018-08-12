@@ -21,8 +21,7 @@ Semua dokumentasi endpoints dari server bisa dilihat [di sini](https://github.co
 - [x] Setup service worker
 - [x] Setup IndexedDb
 - [x] Save to DB for every get request
-- [ ] Sync new reviews (sudah disiapkan contoh codenya silahkan dilihat [di sini](https://github.com/DSCBali/mobile_web_final_project/blob/master/client/service-worker.js))
-
+- [x] Sync new reviews
 ### Responsive 
 - [x] Setup breakpoints
   - [x] max width 600px

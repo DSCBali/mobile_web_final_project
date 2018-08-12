@@ -1,5 +1,7 @@
-const staticCacheName = 'restaurant-review-cache-v5';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v5';
+importScripts('serviceworker-cache-polyfill.js');
+
+const staticCacheName = 'restaurant-review-cache-v8';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v8';
 const allCaches = [staticCacheName, staticRestaurantImageCacheName];
 
 //install service worker
@@ -121,6 +123,65 @@ const servePhoto = request => {
       });
     });
   });
+};
+
+self.addEventListener('sync', function(event) {
+  if(event.tag === 'syncReviews'){
+    event.waitUntil(syncReviews());
+  }
+});
+
+const syncReviews = () => {
+  console.log('Syncing...');
+  
+  const dbRequest = self.indexedDB.open('dbRestaurants', 2); 
+  
+  dbRequest.onsuccess = function() {
+     const db = dbRequest.result;
+     const transaction = db.transaction('restaurantReviews', 'readwrite');
+     const store = transaction.objectStore('restaurantReviews');
+     const restaurantsRequest = store.get('needs_sync');
+ 
+     restaurantsRequest.onsuccess = function() {
+       const data = restaurantsRequest.result;
+
+       console.log(data);
+
+       // Jalankan method fetch (POST) ke server untuk meyimpan ke server.
+       return fetch(`http://localhost:1337/reviews`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type' : 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          restaurant_id: data['restaurant_id'],
+          name: data['name'],
+          rating: data['rating'],
+          comments: data['comments']
+        }),
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
+     }
+ 
+     const restaurantDeleteRequest = store.delete('needs_sync'); 
+     restaurantDeleteRequest.onsuccess = function () {
+       console.log('entry deleted');
+     }
+ 
+     transaction.oncomplete = function(event) {
+      console.log('transaction success');
+     };
+ 
+   }
+   dbRequest.onerror = function(event) {
+     console.error('We couldn\'t fetch anything!');
+   };
 };
 
 self.addEventListener('message', event => {

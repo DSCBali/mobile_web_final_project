@@ -5,7 +5,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
 });
 
-window.initMap = (restaurant) => {
+window.initMap = () => {
+};
+
+const initiateMap = (restaurant) => {
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 16,
     center: restaurant.latlng,
@@ -14,7 +17,9 @@ window.initMap = (restaurant) => {
 
   googleMapsAPIChecker();
   DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-};
+
+  return restaurant;
+}
 
 const googleMapsAPIChecker = () => {
   let googleMapsLoaded = false;
@@ -79,7 +84,7 @@ fetchRestaurantFromURL = () => {
       })
       return restaurant;
     })
-    .then(window.initMap)
+    .then(initiateMap)
     .then(writeToIndexedDB)
     .catch(function(err){
       console.log(err);
@@ -195,7 +200,7 @@ createReviewHTML = (review) => {
   starWrapper.className = 'review-star';
   for (let i = 0; i < review.rating; i++) {
     const star = document.createElement('i');
-    star.className = 'fa fa-star';
+    star.className = 'star-rating-icon';
     starWrapper.appendChild(star);
   }
 
@@ -250,46 +255,70 @@ getParameterByName = (name, url) => {
  */
 
 const reviewForm = document.querySelector('#review-form');
-if (reviewForm) {
+if(reviewForm) {
   reviewForm.addEventListener('submit', event => {
     event.preventDefault();
-    const restaurant_id = getParameterByName('id'); 
+    let now = new Date();
+    const restaurant_id = getParameterByName('id');
     const form = new FormData(event.target);
 
-    // jalankan fetch post
-    // jika berhasil, jalankan fillReviewsHTML method
-    // jika gagal, simpan ke db browser (untuk mengatasi kondisi offline)
     fetch(`http://localhost:1337/reviews`, {
-      method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
+      method: 'POST',
       body: JSON.stringify({
-        id: 'needs_sync', restaurant_id,
+        restaurant_id: restaurant_id,
         name: form.get('name'),
         rating: form.get('rating'),
         comments: form.get('comments')
       })
     })
     .then(function(response){
-      return response.json()
+      if(response.statusText === 'Created'){
+        swal('Operation Succeed!', 'Your review successfully submitted!', 'success');
+      }
+      return response.json();
     })
-    .then(function(result){
+    .then(function(result) {
       const arrData = [result]; //jadikan array: https://stackoverflow.com/a/47682370
-      fillReviewsHTML(arrData)
+      fillReviewsHTML(arrData);
     })
-    .catch(function(err){
-      console.log(err);
+    .catch(function(err) {
+      const review = {
+        restaurant_id: restaurant_id,
+        name: form.get('name'),
+        rating: form.get('rating'),
+        comments: form.get('comments'),
+        createdAt: now.getTime(),
+        updatedAt: now.getTime()
+      };
+      DBHelper.insertUnsyncedReview(review);
+      const container = document.getElementById('reviews-container');
+      const ul = document.getElementById('reviews-list');
+      ul.appendChild(createReviewHTML(review));
+      container.appendChild(ul);
+
+      if(navigator.serviceWorker.controller){
+        navigator.serviceWorker.ready.then(function(reg) {
+          if(reg.sync){
+            reg.sync.register('syncReviews').then(function(event) {
+              swal("You're Offline", "Dont worry! Your review will submitted immediately when you go online", "info");
+            })
+            .catch(function(err) {
+              console.error(err);
+            })
+          }else{
+            //backgroundSync not supported
+            swal("You're Offline", "Please check your internet connection!", "error");
+          }
+        })
+      }else{
+        console.error('Service Worker not found!');
+      }
     })
 
-    // clear values
     event.target.reset();
-
-    /**
-     * navigator.serviceWorker.ready.then(function(swRegistration) {
-     *  return swRegistration.sync.register('syncReviews');
-     * });
-     */
   });
 }
