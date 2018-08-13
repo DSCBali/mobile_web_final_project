@@ -1,7 +1,7 @@
 self.importScripts('serviceworker-cache-polyfill.js', 'js/dbhelper.js');
 
-const staticCacheName = 'restaurant-review-cache-v9';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v8';
+const staticCacheName = 'restaurant-review-cache-v1';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v1';
 const allCaches = [staticCacheName, staticRestaurantImageCacheName];
 
 //install service worker

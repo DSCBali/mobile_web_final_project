@@ -3,6 +3,7 @@ var map;
 
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
+  settingMapFixedPosition();
 });
 
 window.initMap = () => {
