@@ -17,13 +17,15 @@ class DBHelper {
     * IndexedDB Storage Object
     */
   static createDatabase() {
-    return idb.open('dbRestaurants', 2, function(db) {
+    return idb.open('dbRestaurants', 3, function(db) {
       switch(db.oldVersion){
         case 0:
           const store = db.createObjectStore('restaurants', {keyPath: 'id'});
           store.createIndex('orderby-date', 'updatedAt');
         case 1:
-          db.createObjectStore('restaurantReviews');
+          db.createObjectStore('restaurantReviews', {keyPath: 'id'});
+        case 2:
+          db.createObjectStore('unSyncedRestaurantReviews', {keyPath: 'unsync_key'});
       }
     });
   }
@@ -54,7 +56,7 @@ class DBHelper {
       const store = tx.objectStore('restaurantReviews');
 
       reviews.forEach(review => {
-        store.put(review, review.id);
+        store.put(review);
       });
     })
   }
@@ -63,10 +65,10 @@ class DBHelper {
     DBHelper.createDatabase().then(db => {
       if(!db) return;
 
-      const tx = db.transaction('restaurantReviews', 'readwrite');
-      const store = tx.objectStore('restaurantReviews');
+      const tx = db.transaction('unSyncedRestaurantReviews', 'readwrite');
+      const store = tx.objectStore('unSyncedRestaurantReviews');
 
-      store.put(review, 'needs_sync');
+      store.put(review);
     })
 
     return review;

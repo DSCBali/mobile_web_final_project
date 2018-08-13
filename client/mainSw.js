@@ -134,53 +134,53 @@ self.addEventListener('sync', function(event) {
 const syncReviews = () => {
   console.log('Syncing...');
   
-  const dbRequest = self.indexedDB.open('dbRestaurants', 2); 
+  const dbRequest = self.indexedDB.open('dbRestaurants', 3); 
   
   dbRequest.onsuccess = function() {
-     const db = dbRequest.result;
-     const transaction = db.transaction('restaurantReviews', 'readwrite');
-     const store = transaction.objectStore('restaurantReviews');
-     const restaurantsRequest = store.get('needs_sync');
- 
-     restaurantsRequest.onsuccess = function() {
-       const data = restaurantsRequest.result;
+    const db = dbRequest.result;
+    const transaction = db.transaction('unSyncedRestaurantReviews', 'readwrite');
+    const store = transaction.objectStore('unSyncedRestaurantReviews');
+    const restaurantsRequest = store.getAll();
+    
+    restaurantsRequest.onsuccess = function() {
+      const data = restaurantsRequest.result;
 
-       console.log(data);
-
-       // Jalankan method fetch (POST) ke server untuk meyimpan ke server.
-       return fetch(`${DBHelper.DATABASE_URL}/reviews`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type' : 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          restaurant_id: data['restaurant_id'],
-          name: data['name'],
-          rating: data['rating'],
-          comments: data['comments']
-        }),
-      })
-      .then(function(response) {
-        return response.json()
-      })
-      .catch(function(err) {
-        console.error(err);
+      data.map(review => {
+        // Jalankan method fetch (POST) ke server untuk meyimpan ke server.
+        return fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type' : 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            restaurant_id: review['restaurant_id'],
+            name: review['name'],
+            rating: review['rating'],
+            comments: review['comments']
+          }),
+        })
+        .then(function(response) {
+          return response.json()
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
       });
-     }
+    }
  
-     const restaurantDeleteRequest = store.delete('needs_sync'); 
-     restaurantDeleteRequest.onsuccess = function () {
-       console.log('entry deleted');
-     }
+    const restaurantDeleteRequest = store.clear(); 
+    restaurantDeleteRequest.onsuccess = function () {
+      console.log('entry deleted');
+    }
  
-     transaction.oncomplete = function(event) {
+    transaction.oncomplete = function(event) {
       console.log('transaction success');
-     };
+    };
  
    }
    dbRequest.onerror = function(event) {
-     console.error('We couldn\'t fetch anything!');
+     console.error(event);
    };
 };
 

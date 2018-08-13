@@ -787,6 +787,42 @@
         "createdAt": "2018-08-12T13:12:02.803Z",
         "updatedAt": "2018-08-12T13:12:02.803Z",
         "id": 69
+      },
+      {
+        "restaurant_id": "5",
+        "name": "Mr. Hakiki",
+        "rating": "5",
+        "comments": "TASTE SO GOOD!",
+        "createdAt": "2018-08-12T14:11:43.265Z",
+        "updatedAt": "2018-08-12T14:11:43.265Z",
+        "id": 70
+      },
+      {
+        "restaurant_id": "4",
+        "name": "sadsadasdsadsa",
+        "rating": "3",
+        "comments": "dsadasasddsadsa",
+        "createdAt": "2018-08-13T08:51:50.887Z",
+        "updatedAt": "2018-08-13T08:51:50.887Z",
+        "id": 71
+      },
+      {
+        "restaurant_id": "10",
+        "name": "testing offline",
+        "rating": "4",
+        "comments": "WE LOL TU LO DIJADIIN ESPORT!",
+        "createdAt": "2018-08-13T09:39:16.852Z",
+        "updatedAt": "2018-08-13T09:39:16.852Z",
+        "id": 72
+      },
+      {
+        "restaurant_id": "10",
+        "name": "offline kedua",
+        "rating": "5",
+        "comments": "asdjasdjksadjklsadjlkjdsakjlsadkjdsjaklas",
+        "createdAt": "2018-08-13T09:39:16.856Z",
+        "updatedAt": "2018-08-13T09:39:16.856Z",
+        "id": 73
       }
     ]
   },
@@ -842,7 +878,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 69
+      "id": 73
     }
   }
 }

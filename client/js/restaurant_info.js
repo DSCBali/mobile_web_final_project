@@ -249,6 +249,20 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+/**
+  * Generate unique ID for unsyncedReview indexedDB
+  */
+const guid = () => {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+const s4 = () => {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+}
+
 
 /**
  * Submit a review
@@ -287,6 +301,7 @@ if(reviewForm) {
     })
     .catch(function(err) {
       const review = {
+        unsync_key: guid(),
         restaurant_id: restaurant_id,
         name: form.get('name'),
         rating: form.get('rating'),
