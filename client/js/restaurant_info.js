@@ -3,7 +3,6 @@ var map;
 
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
-  settingMapFixedPosition();
 });
 
 window.initMap = () => {
@@ -13,7 +12,8 @@ const initiateMap = (restaurant) => {
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 16,
     center: restaurant.latlng,
-    scrollwheel: false
+    scrollwheel: false,
+    disableDefaultUI: true 
   });
 
   googleMapsAPIChecker();
