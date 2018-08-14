@@ -306,9 +306,7 @@ if(reviewForm) {
         restaurant_id: restaurant_id,
         name: form.get('name'),
         rating: form.get('rating'),
-        comments: form.get('comments'),
-        createdAt: now.getTime(),
-        updatedAt: now.getTime()
+        comments: form.get('comments')
       };
       DBHelper.insertUnsyncedReview(review);
 
