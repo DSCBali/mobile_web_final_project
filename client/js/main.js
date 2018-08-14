@@ -197,6 +197,20 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 }
 
 /**
+  * Generate unique ID for unSyncedAddToFavoriteAction indexedDB
+  */
+const guid = () => {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+const s4 = () => {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+}
+
+/**
  * Create restaurant HTML.
  */
 const createRestaurantHTML = (restaurant) => {
@@ -278,10 +292,37 @@ const createRestaurantHTML = (restaurant) => {
         method: 'PUT'
       })
       .then(function(response) {
-        if(response.statusText === 'OK'){
+        console.log(response);
+        if(response.type !== 'basic'){
           swal('Operation Succeed!', 'Restaurant successfully added to favorite list!', 'success');
           document.getElementById(`favBtn-${restaurant_id}`).className += ' active';
           document.getElementById(`favBtn-${restaurant_id}`).setAttribute('is-favorite', 'true');
+        }else{
+          const action = {
+            'unsync_key': guid(),
+            'restaurant_id': restaurant_id,
+            'is_favorite': true
+          };
+
+          DBHelper.insertUnsyncedAddToFavoriteAction(action);
+
+          if(navigator.serviceWorker.controller){
+            navigator.serviceWorker.ready.then(function(reg) {
+              if(reg.sync){
+                reg.sync.register('syncAddToFavoriteAction').then(function(event) {
+                  swal("You're Offline", "Dont worry! Your action will executed immediately when you back online", "info");
+                })
+                .catch(function(err) {
+                  console.error(err);
+                })
+              }else{
+                //backgroundSync not supported
+                swal("You're Offline", "Please check your internet connection!", "error");
+              }
+            })
+          }else{
+            console.error('Service Worker not found or not ready!');
+          }
         }
       })
       .catch(function(err) {
@@ -298,11 +339,38 @@ const createRestaurantHTML = (restaurant) => {
         method: 'PUT'
       })
       .then(function(response) {
-        if(response.statusText === 'OK'){
+        console.log(response);
+        if(response.type !== 'basic'){
           swal('Operation Succeed!', 'Restaurant successfully remove from favorite list!', 'success');
           //set back to default
           document.getElementById(`favBtn-${restaurant_id}`).className = 'restaurant-fav-btn';
           document.getElementById(`favBtn-${restaurant_id}`).setAttribute('is-favorite', 'false');
+        }else{
+          const action = {
+            'unsync_key': guid(),
+            'restaurant_id': restaurant_id,
+            'is_favorite': false
+          };
+
+          DBHelper.insertUnsyncedAddToFavoriteAction(action);
+
+          if(navigator.serviceWorker.controller){
+            navigator.serviceWorker.ready.then(function(reg) {
+              if(reg.sync){
+                reg.sync.register('syncAddToFavoriteAction').then(function(event) {
+                  swal("You're Offline", "Dont worry! Your action will executed immediately when you back online", "info");
+                })
+                .catch(function(err) {
+                  console.error(err);
+                })
+              }else{
+                //backgroundSync not supported
+                swal("You're Offline", "Please check your internet connection!", "error");
+              }
+            })
+          }else{
+            console.error('Service Worker not found or not ready!');
+          }
         }
       })
       .catch(function(err) {

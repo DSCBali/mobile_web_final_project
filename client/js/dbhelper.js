@@ -17,7 +17,7 @@ class DBHelper {
     * IndexedDB Storage Object
     */
   static createDatabase() {
-    return idb.open('dbRestaurants', 3, function(db) {
+    return idb.open('dbRestaurants', 4, function(db) {
       switch(db.oldVersion){
         case 0:
           const store = db.createObjectStore('restaurants', {keyPath: 'id'});
@@ -26,6 +26,8 @@ class DBHelper {
           db.createObjectStore('restaurantReviews', {keyPath: 'id'});
         case 2:
           db.createObjectStore('unSyncedRestaurantReviews', {keyPath: 'unsync_key'});
+        case 3:
+          db.createObjectStore('unSyncedAddToFavoriteAction', {keyPath: 'unsync_key'});
       }
     });
   }
@@ -46,6 +48,9 @@ class DBHelper {
 
       store.index('orderby-date');
     })
+    .catch(function(err) {
+      console.error(err);
+    })
   }
 
   static insertReviews(reviews) {
@@ -59,6 +64,9 @@ class DBHelper {
         store.put(review);
       });
     })
+    .catch(function(err) {
+      console.error(err);
+    })
   }
 
   static insertUnsyncedReview(review){
@@ -70,8 +78,27 @@ class DBHelper {
 
       store.put(review);
     })
+    .catch(function(err) {
+      console.error(err);
+    })
 
     return review;
+  }
+
+  static insertUnsyncedAddToFavoriteAction(action){
+    DBHelper.createDatabase().then(db => {
+      if(!db) return;
+
+      const tx = db.transaction('unSyncedAddToFavoriteAction', 'readwrite');
+      const store = tx.objectStore('unSyncedAddToFavoriteAction');
+
+      store.put(action);
+    })
+    .catch(function(err) {
+      console.error(err);
+    })
+
+    return action;
   }
 
   /**

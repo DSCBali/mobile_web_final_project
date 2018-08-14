@@ -129,12 +129,16 @@ self.addEventListener('sync', function(event) {
   if(event.tag === 'syncReviews'){
     event.waitUntil(syncReviews());
   }
+
+  if(event.tag === 'syncAddToFavoriteAction'){
+    event.waitUntil(syncAddToFavoriteActions());
+  }
 });
 
 const syncReviews = () => {
-  console.log('Syncing...');
+  console.log('Syncing reviews...');
   
-  const dbRequest = self.indexedDB.open('dbRestaurants', 3); 
+  const dbRequest = self.indexedDB.open('dbRestaurants', 4); 
   
   dbRequest.onsuccess = function() {
     const db = dbRequest.result;
@@ -162,6 +166,60 @@ const syncReviews = () => {
         })
         .then(function(response) {
           return response.json()
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+      });
+    }
+ 
+    const restaurantDeleteRequest = store.clear(); 
+    restaurantDeleteRequest.onsuccess = function () {
+      console.log('entry deleted');
+    }
+ 
+    transaction.oncomplete = function(event) {
+      console.log('transaction success');
+    };
+ 
+   }
+   dbRequest.onerror = function(event) {
+     console.error(event);
+   };
+};
+
+self.addEventListener('message', event => {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
+
+const syncAddToFavoriteActions = () => {
+  console.log('Syncing actions...');
+  
+  const dbRequest = self.indexedDB.open('dbRestaurants', 4); 
+  
+  dbRequest.onsuccess = function() {
+    const db = dbRequest.result;
+    const transaction = db.transaction('unSyncedAddToFavoriteAction', 'readwrite');
+    const store = transaction.objectStore('unSyncedAddToFavoriteAction');
+    const restaurantsRequest = store.getAll();
+    
+    restaurantsRequest.onsuccess = function() {
+      const data = restaurantsRequest.result;
+
+      data.map(action => {
+        // Jalankan method fetch (PUT) ke server untuk meyimpan ke server.
+        return fetch(`${DBHelper.DATABASE_URL}/restaurants/${action['restaurant_id']}/?is_favorite=${action['is_favorite']}`, 
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: 'PUT'
+        })
+        .then(function(response) {
+          return response.json();
         })
         .catch(function(err) {
           console.error(err);
