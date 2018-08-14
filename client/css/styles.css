@@ -541,11 +541,11 @@ textarea#rev-comments:focus{
   display: inline-block;
 }
 .exit-button {
-  display: inline-block;
   width: 20px;
   height: 20px;
   cursor: pointer;
   position: relative;
+  float: right;
 
 }
 .exit-button::before, .exit-button::after{
