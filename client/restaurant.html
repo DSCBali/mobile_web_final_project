@@ -139,8 +139,10 @@
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script src="js/init.js"></script>
+
   <script src="js/indexeddb.js"></script>
   <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <script src="js/overview.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDWVakzxJSRtpMhMzaX8tt9b2vHc38cpE&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
@@ -170,9 +172,7 @@
     form.addEventListener('submit', (e)=>{
       e.preventDefault()
       submitComment()
-      console.log("submit");
       resetPage()
-      updateOverview()
     })
   </script>
 

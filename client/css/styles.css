@@ -426,3 +426,44 @@ textarea#rev-comments:focus{
 #restaurant-hours td {
   color: #666;
 }
+#offline-sign{
+  padding: 20px;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  display: none;
+  background-color: #252831;
+  color: #dcdcdc;
+  transition: all ease-in-out .5s;
+  overflow: hidden;
+  z-index: 10;
+}
+#offline-sign h3 {
+  display: inline-block;
+}
+.exit-button {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  float: right;
+  cursor: pointer;
+  position: relative;
+
+}
+.exit-button::before, .exit-button::after{
+  content: ""; 
+  width: 20px;
+  height: 2px;
+  display: inline-block;
+  background-color: #d9d9d9;
+  position: relative;
+}
+.exit-button::before {
+  transform: translate(0px, -1px) rotate(45deg);
+}
+.exit-button::after {
+  transform: translate(0px, -20px) rotate(-45deg);
+}
+#offline-sign p {
+  color: #d9d9d9;
+}

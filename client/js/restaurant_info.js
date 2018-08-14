@@ -1,17 +1,14 @@
 let restaurant;
 var map;
-const dbName = 'restaurant';
-const version = 2;
-// var reviews =[]
 
 /**
  * Initialize Google map, called from HTML.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchReviews();
-  createDB(dbName, version);
-
+  offlineReviews();
 });
+
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
@@ -68,6 +65,9 @@ fetchReviews = () => {
         createReviewHTML(review);
       })
       overviewHtml(totalReviews);  
+      totalReviews.map(review => {
+        insertData('reviews',review);
+      })
     }
   })
 }
@@ -151,7 +151,7 @@ createReviewHTML = (review) => {
   li.appendChild(comments);
 
   ul.append(li);
-  insertData('reviews',review);
+  
 }
 
 /**
@@ -232,19 +232,35 @@ submitComment = () => {
   data.rating = fieldRating;
   data.comments = fieldComment;
   let json = JSON.stringify(data);  
-  self.data = json;
-  submitRequestComment(json);
+  // self.data = json;
+  
+  if (!navigator.onLine){
+    let newData = data;
+    newData.id = makeid()
+    newData.createdAt = Date.now();
+    insertData('offlineSync',newData);
+    activateSync()
+    offlineOverview()
+    createReviewHTML(newData);
+    // offlineOverview()
+  }else{
+    submitRequestComment(json)
+  }
 }
 submitRequestComment = (data) => {
   DBHelper.postReview(data, (error, data)=>{
     if(error) {
       console.error('Error occured while saving data [error] :',error)
+      
     }else {
       createReviewHTML(data)
       updateOverview()
+      detectReview()
+      insertData(data)
     }
   })
 }
+
 updateOverview =()=> {
   const id = getParameterByName('id');
   DBHelper.getRev(id, (error, reviews) => {
@@ -255,11 +271,88 @@ updateOverview =()=> {
     }
   })
 }
-createDB = (dbName, version) => {
-  IndexedDB.initDB(dbName,version)
-  .then(function(db){
-  });
-}
+
 insertData = (sceme, data) => {
-  IndexedDB.insertDB(dbName,version,sceme,data);
+  IndexedDB.insertDB(sceme,data);
 }
+makeid = () => {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+/**
+ * offline overview
+ */
+offlineOverview = () => {
+  const restaurantId = getParameterByName('id')
+  console.log('offline Overview')
+  const offlineDB = IndexedDB.initDB()
+  offlineDB.then(db => {
+    const onTx = db.transaction('reviews');
+    const onStore = onTx.objectStore('reviews');
+    const onReviewIndex = onStore.index('restaurant_id')
+    const onReviews = onReviewIndex.getAll(restaurantId);
+    return onReviews;
+  }).then(reviewsOn => {
+    if (!reviewsOn) return;
+    offlineDB.then(db => {
+      const offTx = db.transaction('offlineSync');
+      const offStore = offTx.objectStore('offlineSync');
+      const offStoreIndex = offStore.index('restaurant_id')
+      const offReviews = offStoreIndex.getAll(restaurantId);
+
+      return offReviews;
+    }).then(reviewsOff => {
+      if (!reviewsOff) return;
+      const results = reviewsOn;
+      reviewsOff.map(reviewOff => {
+        results.push(reviewOff)
+      })
+      overviewHtml(results)
+    })
+  })
+  
+}
+/**
+ * offline reviews
+ */
+offlineReviews = () => {
+  const database = IndexedDB.initDB();
+  database.then(db => {
+    const tx = db.transaction('offlineSync');
+    const store = tx.objectStore('offlineSync');
+    const reviews = store.getAll();
+    return reviews
+  })
+  .then(reviews => {
+    if(!reviews) return;
+    reviews.map(review => {
+      createReviewHTML(review);
+    })
+  })
+}
+ /**
+ * sync background
+ */
+activateSync = () => {
+  if(navigator.serviceWorker.controller) {
+    navigator.serviceWorker.ready.then((registration)=> {
+      if (registration.sync) {
+        registration.sync.register('offline-review').then(()=>{
+          console.log("[SW] offline")
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      }else {
+        console.log("[No Sync] offline")
+      }
+    })
+  }
+}
+
+

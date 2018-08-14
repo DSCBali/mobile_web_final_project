@@ -217,9 +217,11 @@ class DBHelper {
     xhr.onload = () => {
       var result = JSON.parse(xhr.responseText);
       if (xhr.readyState == 4 && xhr.status == "201") {
+        console.log(xhr);
         callback(null,result )
       } else {
-        callback(error,null)
+        const error = xhr.onerror
+        callback(error, data)
       }
     };
     xhr.send(data);

@@ -3,8 +3,7 @@ let restaurants,
   cuisines,reviews
 var map
 var markers = []
-const dbName = 'restaurant';
-const version = 2;
+
 
 
 /**
@@ -13,7 +12,6 @@ const version = 2;
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
-  createDB(dbName, version);
 
 });
 /**
@@ -206,9 +204,12 @@ createRating = (id) => {
     const productRating = document.getElementById(`product-rating-r${id}`)
     let totalrating = 0;
     reviews.map(r => {
-      totalrating += parseInt(r.rating);
+      if(r.rating){
+        totalrating += parseInt(r.rating);
+      }
     }) 
     let avRating = (totalrating/reviews.length).toFixed(1);
+
     const rating = document.createElement('span');
     const ratingStar = document.createElement('span');
     productRating.setAttribute('class', 'product_rating');
@@ -222,11 +223,6 @@ createRating = (id) => {
     productRating.append(numRev);
   })
 }
-createDB = (dbName, version) => {
-  IndexedDB.initDB(dbName,version)
-  .then(function(db){
-  });
-}
 insertData = (sceme, data) => {
-  IndexedDB.insertDB(dbName,version,sceme,data);
+  IndexedDB.insertDB(sceme,data);
 }
