@@ -42,7 +42,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 100%;
 }
 #footer {
-  width: 100%;
+  /* width: 100%; */
   background-color: #444;
   color: #aaa;
   font-size: 8pt;
@@ -74,7 +74,6 @@ nav h1 a {
     background-color: #eee;
     font-size: 17px;
     margin: 0;
-    width: 100%;
 }
 
 /* Display list items side by side */
@@ -137,6 +136,7 @@ nav h1 a {
   list-style: outside none none;
   margin: 0;
   padding: 30px 15px 60px;
+  overflow: hidden;
   text-align: center;
 }
 
@@ -154,11 +154,63 @@ nav h1 a {
   border-radius: 3px;
   transition: ease-in-out .1s;
 }
+#restaurants-list li h1, #restaurants-list li p {
+  overflow: hidden;
+  white-space: nowrap;
+}
+#restaurants-list li h1::before, #restaurants-list li p::before {
+  content: " ";
+  width: 35px;
+  height: 20px;
+  position: relative;
+  float: right;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), white)
+
+}
 @media screen and (max-width:600px) {
   #restaurants-list li {
-    width: 30%;
+    width: 85%;
+  }
+  
+  #restaurants-list li:not(:first-child){
+    margin: 10px 0px 10px 0px;
+  }
+  #restaurants-list {
+    padding: 30px 0px 30px 0px;
   }
 }
+@media screen and (min-width:601px) and (max-width:700px) {
+  #restaurants-list li {
+    margin: 0;
+    width: 42%;
+    margin-bottom: 20px;
+
+  }
+  #restaurants-list {
+    padding: 30px 15px 30px 15px;
+  }
+}
+@media screen and (min-width:701px) and (max-width:800px) {
+  #restaurants-list li {
+    margin: 0;
+    width: 43%;
+    margin-bottom: 25px;
+
+  }
+  #restaurants-list {
+    padding: 30px 30px 30px 30px;
+  }
+}
+
+@media screen and (min-width:601px) and (max-width:800px){
+  #restaurants-list li:nth-child(2n){
+    float: right;
+  }
+  #restaurants-list li:nth-child(2n + 1){
+    float: left;
+  }
+}
+
 
 #restaurants-list li:hover {
   box-shadow: 0 0 8px 0 gray;
@@ -212,8 +264,8 @@ nav h1 a {
   display: inline-block;
   position: relative;
   height: 300px;
-  width: 40%;
-  padding: 30px 0px 80px 0px;
+  /* width: 40%; */
+  
 }
 .inside #map-container h2 {
   color: #f18200;
@@ -235,8 +287,7 @@ nav h1 a {
 }
 .inside #footer {
   bottom: 0;
-  position: absolute;
-  width: 100%;
+  position: relative;
 }
 .datail-rating {
   margin-top: 20px;
@@ -273,16 +324,12 @@ nav h1 a {
   text-transform: uppercase;
   line-height: 1.1;
 }
-.restaurant-additional-info {
-  width: 30%;
-}
+
 .restaurant-additional-info #overviews h3 {
   margin-bottom: 0px;
 }
 
-#restaurant-img {
-	width: 90%;
-}
+
 #restaurant-address {
   font-size: 12pt;
   margin: 10px 0px;
@@ -297,7 +344,7 @@ nav h1 a {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-	width: 90%;
+
 }
 #restaurant-container{
   display: flex;
@@ -307,21 +354,74 @@ nav h1 a {
   padding: 10px 40px 30px;
   width: 100%;
 }
-#restaurant-container .restaurant-main-info {
-  width: 50%;
+#restaurant-img {
+  width: 100%;
+}
+
+@media screen and (max-width:800px) {
+  #restaurant-container {
+    flex-direction: column;
+  }
+  #restaurant-container .restaurant-main-info {
+    width: 100%;
+  }
+  .restaurant-additional-info {
+    width: 100%;
+  }
+  
+  #reviews-container{
+    width: 100%;
+    order: 3;
+  }
+  #restaurant-cuisine {
+    width: 100%;
+  }
+  .inside #map-container {
+    padding: 30px 50px 80px 50px;
+    width: 100%;
+    order: 2;
+  }
+  #reviews-container {
+    padding:30px 40px 80px 40px;
+  }
+  .datail-rating div .bar-background {
+    width: 64%;
+  }
+}
+
+@media screen and (min-width:801px) {
+  #restaurant-container {
+    flex-direction: row;
+  }
+  #restaurant-container .restaurant-main-info {
+    width: 50%;
+  }
+  .restaurant-additional-info {
+    width: 45%;
+    margin-left: 5%;
+  }
+  #reviews-container {
+    padding: 30px;
+    width: 45%;
+  }
+  #map-container {
+    width: 45%;
+    padding: 30px 0 0 0;
+    margin-left: 2%;
+
+  }
+  #reviews-container h2 {
+    padding-bottom: 0;
+  }
 }
 #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  /* padding: 10px 40px 30px; */
   display: flex;
   flex-wrap: wrap;
-  width: 50%;
   flex-direction: column;
 }
-#reviews-container {
-  padding:30px 0px 80px 40px;
-}
+
 #reviews-container h2 {
   color: #f58500;
   font-size: 24pt;
@@ -345,7 +445,6 @@ nav h1 a {
   overflow: hidden;
   padding: 20px;
   position: relative;
-  width: 85%;
 }
 input#rev-name{
   display: inline-block;
@@ -418,7 +517,7 @@ textarea#rev-comments:focus{
   overflow: hidden;
   padding:20px;
   position: relative;
-  width: 85%;
+  /* width: 85%; */
 }
 #reviews-list li p {
   margin: 0 0 10px;
