@@ -22,12 +22,17 @@ Semua dokumentasi endpoints dari server bisa dilihat [di sini](https://github.co
 - [x] Setup IndexedDb
 - [x] Save to DB for every get request
 - [x] Sync new reviews
+
 ### Responsive 
 - [x] Setup breakpoints
   - [x] max width 600px
   - [x] between 600px & 960px
   - [x] min width 960px
-  
+ 
 - [x] Usage of img srcsets & picture tag (for webp support)
+
+### Additional Feature
+- [x] Add to favorite restaurant
+- [x] Background sync for add to favorite restaurant
 
 Note: Pastikan saat ingin melakukan testing fitur background sync nya, dalam kondisi service worker sudah activated (kunjungan web kedua, atau dengan refresh ulang, atau akses halaman lain)
