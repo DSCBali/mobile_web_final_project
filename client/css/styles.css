@@ -544,7 +544,6 @@ textarea#rev-comments:focus{
   display: inline-block;
   width: 20px;
   height: 20px;
-  float: right;
   cursor: pointer;
   position: relative;
 
