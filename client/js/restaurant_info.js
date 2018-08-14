@@ -311,10 +311,6 @@ if(reviewForm) {
         updatedAt: now.getTime()
       };
       DBHelper.insertUnsyncedReview(review);
-      const container = document.getElementById('reviews-container');
-      const ul = document.getElementById('reviews-list');
-      ul.appendChild(createReviewHTML(review));
-      container.appendChild(ul);
 
       if(navigator.serviceWorker.controller){
         navigator.serviceWorker.ready.then(function(reg) {
