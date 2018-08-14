@@ -1,7 +1,7 @@
 self.importScripts('serviceworker-cache-polyfill.js', 'js/dbhelper.js');
 
-const staticCacheName = 'restaurant-review-cache-v1';
-const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v1';
+const staticCacheName = 'restaurant-review-cache-v2';
+const staticRestaurantImageCacheName = 'restaurant-review-cache-image-v2';
 const allCaches = [staticCacheName, staticRestaurantImageCacheName];
 
 //install service worker
@@ -15,7 +15,7 @@ self.addEventListener('install', event => {
 		'js/idb.js',
 		'js/dbhelper.js',
 		'js/main.js',
-    'js/restaurant_info.js',
+    'js/restaurant_info.js'
 	];
 
 	//minta service worker menunggu hingga semua file ter-cache oleh browser

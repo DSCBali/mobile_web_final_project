@@ -256,6 +256,63 @@ const createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   contentWrapper.append(more)
 
+  const favIcon = document.createElement('i');
+
+  const favBtn = document.createElement('span');
+  favBtn.id = `favBtn-${restaurant.id}`;
+  favBtn.className = 'restaurant-fav-btn';
+  favBtn.setAttribute('is-favorite', 'false')
+  if(restaurant.is_favorite === 'true'){
+    favBtn.setAttribute('is-favorite', 'true');
+    favBtn.className += ' active';
+  }
+  favBtn.appendChild(favIcon);
+  favBtn.addEventListener('click', () => {
+    let restaurant_id = restaurant.id;
+    if(document.getElementById(`favBtn-${restaurant_id}`).getAttribute('is-favorite') === 'false'){
+      fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=true`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PUT'
+      })
+      .then(function(response) {
+        if(response.statusText === 'OK'){
+          swal('Operation Succeed!', 'Restaurant successfully added to favorite list!', 'success');
+          document.getElementById(`favBtn-${restaurant_id}`).className += ' active';
+          document.getElementById(`favBtn-${restaurant_id}`).setAttribute('is-favorite', 'true');
+        }
+      })
+      .catch(function(err) {
+        console.error(err);
+      })
+    }
+
+    if(document.getElementById(`favBtn-${restaurant_id}`).getAttribute('is-favorite') === 'true'){
+      fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=false`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PUT'
+      })
+      .then(function(response) {
+        if(response.statusText === 'OK'){
+          swal('Operation Succeed!', 'Restaurant successfully remove from favorite list!', 'success');
+          //set back to default
+          document.getElementById(`favBtn-${restaurant_id}`).className = 'restaurant-fav-btn';
+          document.getElementById(`favBtn-${restaurant_id}`).setAttribute('is-favorite', 'false');
+        }
+      })
+      .catch(function(err) {
+        console.error(err);
+      })
+    }
+  });
+
+  contentWrapper.append(favBtn);
+
   return li
 }
 
