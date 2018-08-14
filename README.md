@@ -29,3 +29,5 @@ Semua dokumentasi endpoints dari server bisa dilihat [di sini](https://github.co
   - [x] min width 960px
   
 - [x] Usage of img srcsets & picture tag (for webp support)
+
+Note: Pastikan saat ingin melakukan testing fitur background sync nya, dalam kondisi service worker sudah activated (kunjungan web kedua, atau dengan refresh ulang, atau akses halaman lain)

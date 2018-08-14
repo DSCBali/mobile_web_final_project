@@ -321,7 +321,7 @@ const createRestaurantHTML = (restaurant) => {
               }
             })
           }else{
-            console.error('Service Worker not found or not ready!');
+            console.error('Service Worker not activated!');
           }
         }
       })

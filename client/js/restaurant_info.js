@@ -325,7 +325,7 @@ if(reviewForm) {
           }
         })
       }else{
-        console.error('Service Worker not found!');
+        console.error('Service Worker not activated!');
       }
     })
 
