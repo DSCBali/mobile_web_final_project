@@ -1,4 +1,4 @@
-importScripts('./js/cache-polyfill.js','./js/idb.js','./js/dbhelper.js', './js/indexeddb.js');
+importScripts('./js/cache-polyfill.js','./js/idb.js','./js/dbhelper.js', './js/indexeddb.js','./offline.js');
 
 const cacheStatic = 'restaurant-static-v1';
 const cacheImage = 'restaurant-image'
@@ -12,7 +12,9 @@ const files = [
     './js/idb.js',
     './restaurant.html',
     './js/restaurant_info.js',
-    './img/big-star1.png'
+    './img/big-star1.png',
+    './img/fetch-dog.jpg',
+    './offline.js'
 ]
 
 /**
@@ -63,7 +65,7 @@ self.addEventListener('install', (event) => {
         })
         .catch(()=> {
             return new Response(
-                'Whoa Offline mate!',
+                offlinePage,
                 {
                     headers : {'Content-Type': 'text/html'}
                 }

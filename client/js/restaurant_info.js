@@ -344,6 +344,8 @@ activateSync = () => {
       if (registration.sync) {
         registration.sync.register('offline-review').then(()=>{
           console.log("[SW] offline")
+          createAlert();
+          createAlert().style.display = 'inline-block'
         })
         .catch((err) => {
           console.log(err)

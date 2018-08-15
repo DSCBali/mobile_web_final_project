@@ -1,5 +1,19 @@
-(function () {
+
+exitBut = () => {
+  const exitButton = document.querySelectorAll('.exit-button');
+  exitButton.forEach(button => {
+    button.addEventListener('click', e => {
+      const box = document.getElementById('offline-sign');
+      if(box) {
+        box.remove()
+      }
+    })
+  })
+}
+createAlert = () => {
   const main = document.getElementById('maincontent');
+  const modal = document.getElementById('offline-sign');
+  
   const box = document.createElement('div');
   const h3 = document.createElement('h3');
   const ext = document.createElement('div');
@@ -11,8 +25,13 @@
   p.innerHTML = 'All your activities will be synced when you\'re back online';
   box.append(p)
   box.setAttribute('id', 'offline-sign');
+  box.style.display = 'none';
 
-  main.append(box)
+  
+  if (!modal) {
+    main.append(box)
+  }
+  
   window.addEventListener('scroll', e => {
     if(box) {
       if(!navigator.onLine) {
@@ -22,9 +41,7 @@
       }
     }
   })
-})();
-const exitButton = document.querySelector('.exit-button');
-exitButton.addEventListener('click', e => {
-  const box = document.getElementById('offline-sign');
-  box.remove()
-})
+  exitBut()
+  return modal;
+};
+createAlert();
