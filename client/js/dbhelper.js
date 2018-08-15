@@ -6,6 +6,7 @@
 
 const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
   upgradeDb.createObjectStore('restaurants');
+  upgradeDb.createObjectStore('reviews');
 });
 
 class DBHelper {
@@ -209,50 +210,79 @@ class DBHelper {
   }
 
   /**
-   * fetch all restaurant review
+   * fetch restaurant review by id
+   * @param {Integer} id restaurant id
+   * @param {Function} callback
    */
-
-  static fetchRestaurantsReview(callback) {
-    fetch(DBHelper.REVIEW_URL)
-      .then(response => response.json())
+  static fetchRestaurantReviewsById(id, callback) {
+    fetch(`${DBHelper.REVIEW_URL}?restaurant_id=${id}`)
+      .then(res => res.json())
       .then(data => {
         dbPromise.then(db => {
-          const tx = db.transaction('restaurants', 'readwrite');
-          const keyValStore = tx.objectStore('restaurants');
-          keyValStore.put(data, 'reviews');
+          const tx = db.transaction('reviews', 'readwrite');
+          const keyValStore = tx.objectStore('reviews');
+          keyValStore.put(data, id);
           return tx.complete;
         });
-        return callback(null, data);
+        return callback(data.reverse());
       })
-      .catch(err =>
+      .catch(() =>
         dbPromise
           .then(db => {
-            const tx = db.transaction('restaurants');
-            const keyValStore = tx.objectStore('restaurants');
-            return keyValStore.get('reviews');
+            const tx = db.transaction('reviews');
+            const keyValStore = tx.objectStore('reviews');
+            return keyValStore.get(id);
           })
-          .then(val => callback(null, val))
-          .catch(() => callback(err))
+          .then(val => callback(val.reverse()))
+          .catch(() => callback('Review does not exist'))
       );
   }
 
   /**
-   * fetch restaurant review by id
+   * Save data to indexdb
+   * @param {Object} data data to save in indexdb
    */
-  static fetchRestaurantReviewsById(id, callback) {
-    DBHelper.fetchRestaurantsReview((error, reviews) => {
-      if (error) {
-        callback(null);
+  static saveToDb(data) {
+    return dbPromise.then(async db => {
+      const tx = db.transaction('reviews', 'readwrite');
+      const keyValStore = tx.objectStore('reviews');
+      const needSync = await keyValStore.get('needs_sync');
+      if (!needSync) {
+        return keyValStore.put([data], 'needs_sync');
       } else {
-        const review = reviews.filter(r => r.restaurant_id == id);
-        if (review) {
-          // Got the review
-          callback(review);
-        } else {
-          // review does not exist in the database
-          callback('Review does not exist');
-        }
+        return keyValStore.put(needSync.concat(data), 'needs_sync');
       }
     });
+  }
+
+  /**
+   * post review from idb
+   */
+  static postReview() {
+    dbPromise
+      .then(async db => {
+        const tx = db.transaction('reviews', 'readwrite');
+        const keyValStore = tx.objectStore('reviews');
+        const needSync = await keyValStore.get('needs_sync');
+        keyValStore.delete('needs_sync');
+        return needSync;
+      })
+      .then(data => {
+        console.log(data);
+        return Promise.all(
+          data.map(val =>
+            fetch(DBHelper.REVIEW_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+              },
+              redirect: 'follow',
+              referrer: 'no-referrer',
+              body: JSON.stringify(val)
+            })
+          )
+        );
+      })
+      .catch(err => console.error(err));
   }
 }

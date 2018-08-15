@@ -18,21 +18,41 @@ Nama: Premananda
 
 ## Reviews
 
-Fetch reviews for each restaurants
+[x] Fetch reviews for each restaurants
 
 # Offline
 
-- Setup service worker (workbox optional)
-- Setup IndexedDb
-- Save to DB for every get request
+[x] Setup service worker (workbox optional)
+[x] Setup IndexedDb
+[x] Save to DB for every get request
+
 - Sync new reviews
 
 # Responsive
 
-- Setup breakpoints
+[x] Setup breakpoints
 
-  - max width 600px
-  - between 600px & 960px
-  - min width 960px
+[x] max width 600px
+[x] between 600px & 960px
+[x] min width 960px
 
-- Usage of img srcsets & picture tag (for webp support)
+[x] Usage of img srcsets & picture tag (for webp support)
+
+todo
+
+[x] create google maps error handler in main.js
+
+[x] create toast
+[x] delete all cache if online / redownload cache
+
+[x] add page not found
+[x] add page you are offline
+[x] change fetch review api to only 1 restaurant
+[x] change no review messages in offline
+[x] active background sync using review form
+[x] make need_sync to get array
+[x] post value in need_sync
+
+- create idb index
+  [x] optimistic response
+  [x] add favicon

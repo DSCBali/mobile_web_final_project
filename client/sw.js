@@ -1,85 +1,96 @@
+const allCache = ['restaurant-StaticV1', 'restaurant-ImgV1'];
+const [staticName, imgName, mapName] = allCache;
+
 self.addEventListener('install', event => {
   const urlsToCache = [
     '/',
     '/css/styles.css',
-    '/img',
     '/restaurant/',
     '/restaurant?id=',
     '/js/dbhelper.js',
     '/js/idb.js',
     '/js/main.js',
-    '/js/restaurant_info.js'
+    '/js/restaurant_info.js',
+    '/404'
   ];
 
   // waitUntil menyuruh SW untuk tunggu hingga proses selesai
   event.waitUntil(
-    caches
-      .open('wittr-static-v1')
-      .then(cache => cache.addAll(urlsToCache))
-      .then(self.skipWaiting())
+    caches.open(staticName).then(cache => cache.addAll(urlsToCache))
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request, { ignoreSearch: true }).then(response => {
-      return response || fetch(event.request);
-    })
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then(cacheNames =>
+        Promise.all(
+          cacheNames
+            .filter(
+              cacheName =>
+                cacheName.startsWith('restaurant-') &&
+                !allCache.includes(cacheName)
+            )
+            .map(cacheName => caches.delete(cacheName))
+        )
+      )
   );
-  // Coba simulasi offline dan lihat hasilnya
+});
+
+const servePhoto = request => {
+  const storageUrl = request.url.replace(/\.(jpg|webp)$/, '');
+  return caches.open(imgName).then(cache => {
+    return cache.match(storageUrl).then(response => {
+      if (response) return response;
+      return fetch(request).then(networkResponse => {
+        cache.put(storageUrl, networkResponse.clone());
+        return networkResponse;
+      });
+    });
+  });
+};
+
+self.addEventListener('fetch', event => {
+  const reqUrl = new URL(event.request.url);
+
+  if (reqUrl.pathname.startsWith('/img/')) {
+    event.respondWith(servePhoto(event.request));
+    return;
+  }
+
+  event.respondWith(
+    caches
+      .match(event.request, { ignoreSearch: true })
+      .then(response => {
+        if (response) return response;
+        return fetch(event.request).catch(
+          () =>
+            new Response(
+              `
+        <script type="application/javascript">
+          window.location.href = '/404?off=1';
+        </script>
+        `,
+              {
+                headers: { 'Content-Type': 'text/html' }
+              }
+            )
+        );
+      })
+      .catch(() => {
+        console.log('FAILED ON CACHES');
+      })
+  );
 });
 
 self.addEventListener('sync', function(event) {
   console.log('syncing...', event.tag);
   console.log('syncing...', event);
   if (event.tag == 'syncReviews') {
-    event.waitUntil(self.syncReviews());
+    if (typeof idb === 'undefined') importScripts('js/idb.js');
+    if (typeof DBHelper === 'undefined' || typeof dbPromise === 'undefined')
+      importScripts('js/dbhelper.js');
+    event.waitUntil(DBHelper.postReview());
   }
 });
-
-function syncReviews() {
-  const dbRequest = self.indexedDB.open('restaurants-db', 1); // pastikan nama db kalian sudah benar.
-
-  dbRequest.onsuccess = function() {
-    const db = dbRequest.result;
-    // di sini contoh object storenya adalah: reviews
-    const transaction = db.transaction('restaurants', 'readwrite');
-    const store = transaction.objectStore('restaurants');
-    // pastikan ketika kalian save review ke db sebelumnya mempunya key yg sama dengan di bawah
-    const restaurantsRequest = store.get('needs_sync');
-
-    restaurantsRequest.onsuccess = function() {
-      const data = restaurantsRequest.result;
-      console.log(data);
-
-      fetch('http://localhost:1337/reviews/', {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, cors, *same-origin
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-          // "Content-Type": "application/x-www-form-urlencoded",
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrer: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify(data) // body data type must match "Content-Type" header
-      })
-        .then(response => response.json()) // parses response to JSON
-        .then(res => console.log(res))
-        .catch(error => console.error(`Fetch Error =\n`, error));
-    };
-
-    // pastikan ketika kalian save review ke db sebelumnya mempunya key yg sama dengan di bawah
-    const restaurantDeleteRequest = store.delete('needs_sync');
-    restaurantDeleteRequest.onsuccess = function() {
-      console.log('entry deleted');
-    };
-
-    transaction.oncomplete = function(event) {
-      console.log('transaction completed');
-    };
-  };
-  dbRequest.onerror = function(event) {
-    // Handle errors!
-    console.error("We couldn't fetch anything!");
-  };
-}

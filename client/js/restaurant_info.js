@@ -9,14 +9,41 @@ window.initMap = () => {
     if (error) {
       // Got an error!
       console.error(error);
+      window.location.href = '/404.html';
     } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
+      let googleMapsLoaded = false;
+      const mapElement = document.getElementById('map');
+      self.map = new google.maps.Map(mapElement, {
         zoom: 16,
         center: restaurant.latlng,
         scrollwheel: false
       });
+
+      google.maps.event.addListener(map, 'tilesloaded', function() {
+        googleMapsLoaded = true;
+        google.maps.event.clearListeners(map, 'tilesloaded');
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      });
+
+      setTimeout(function() {
+        if (!googleMapsLoaded) {
+          mapElement.style.transition = 'height 1s ease';
+          mapElement.style.height = '0';
+          const toast = document.createElement('div');
+          toast.id = 'snackbar';
+          toast.className = 'show';
+          if (navigator.onLine) {
+            toast.innerText = 'Failed to load map, please chek your connection';
+          } else {
+            toast.innerText = 'Failed to load map, you are offline';
+          }
+          mapElement.appendChild(toast);
+          setTimeout(() => {
+            toast.className = toast.className.replace('show', '');
+          }, 3000);
+        }
+      }, 4000);
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
 };
@@ -142,7 +169,11 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   if (!reviews) {
     const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
+    if (!navigator.onLine) {
+      noReviews.innerHTML = 'You are offline, go online to view reviews';
+    } else {
+      noReviews.innerHTML = 'No reviews yet!';
+    }
     container.appendChild(noReviews);
     return;
   }
@@ -218,40 +249,48 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
-const syncMessage = () => {
-  alert('ALERTED!');
-  navigator.serviceWorker.ready.then(registration =>
-    registration.sync.register('syncReviews')
-  );
-};
-
-const addData = () => {
-  const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
-    upgradeDb.createObjectStore('restaurants');
-  });
-  const data = {
-    restaurant_id: 1,
-    name: 'jck',
-    rating: 3,
-    comments: 'jckss'
-  };
-  dbPromise.then(db => {
-    const tx = db.transaction('restaurants', 'readwrite');
-    const keyValStore = tx.objectStore('restaurants');
-    keyValStore.put(data, 'needs_sync');
-    return tx.complete;
-  });
-};
-
 document.getElementById('reviewForm').addEventListener('submit', e => {
   e.preventDefault();
   const val = e.target;
   if (val.rating.value === '') {
     alert('Rating must be provided');
+    return;
   }
-  console.log('name', val.name.value);
-  console.log('stars', val.rating.value);
-  console.log('review', val.review.value);
+
+  const restaurant_id = getParameterByName('id');
+  const data = {
+    name: val.name.value,
+    rating: val.rating.value,
+    comments: val.review.value,
+    restaurant_id
+  };
+
+  DBHelper.saveToDb(data)
+    .then(() => {
+      navigator.serviceWorker.ready.then(registration => {
+        registration.sync.register('syncReviews');
+      });
+      if (navigator.onLine) {
+        const reviewList = document.getElementById('reviews-list');
+        reviewList.insertBefore(
+          createReviewHTML({ ...data, createdAt: Date.now() }),
+          reviewList.firstChild
+        );
+      } else {
+        const toast = document.createElement('div');
+        toast.id = 'snackbar';
+        toast.className = 'show';
+        if (!navigator.onLine) {
+          toast.innerText = 'You are offline, we will post your review soon';
+        }
+        document.getElementById('restaurant-form').appendChild(toast);
+        setTimeout(() => {
+          toast.className = toast.className.replace('show', '');
+        }, 3000);
+      }
+    })
+    .catch(err => console.error(err));
+
   val.name.value = '';
   val.rating.value = '';
   val.review.value = '';

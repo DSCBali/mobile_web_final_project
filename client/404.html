@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" sizes="76x76" type="image/x-icon" href="/favicon.ico">
+  <title>404 Page not found</title>
+</head>
+
+<body style="color: #555555; margin: 40px; background-color: #bdbdbd">
+  <h1 id="head" style="text-align: center; font-size: 5em; color: #757575;">
+    404
+  </h1>
+  <h2 id="text" style="text-align: center; color: #777777;">
+    Page not found
+  </h2>
+</body>
+<script type="application/javascript">
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+  if (getParameterByName('off')) {
+    document.getElementById('head').innerText = 'OFFLINE';
+    document.getElementById('text').innerText = 'You are offline, please check your connection';
+  }
+</script>
+
+</html>

@@ -8,21 +8,21 @@ var markers = [];
 document.addEventListener('DOMContentLoaded', event => {
   fetchNeighborhoods();
   fetchCuisines();
-  // registerServiceWorker();
+  registerServiceWorker();
 });
 
-// const registerServiceWorker = () => {
-//   if (!navigator.serviceWorker) return;
+const registerServiceWorker = () => {
+  if (!navigator.serviceWorker) return;
 
-//   navigator.serviceWorker
-//     .register('sw.js')
-//     .then(() => {
-//       console.log('Service Worker Registration Success!');
-//     })
-//     .catch(() => {
-//       console.log('Service Worker Registration Failed!');
-//     });
-// };
+  navigator.serviceWorker
+    .register('sw.js')
+    .then(() => {
+      console.log('Service Worker Registration Success!');
+    })
+    .catch(() => {
+      console.log('Service Worker Registration Failed!');
+    });
+};
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -148,7 +148,33 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
-  addMarkersToMap();
+
+  let googleMapsLoaded = false;
+  const mapElement = document.getElementById('map');
+  google.maps.event.addListener(map, 'tilesloaded', function() {
+    googleMapsLoaded = true;
+    google.maps.event.clearListeners(map, 'tilesloaded');
+    addMarkersToMap();
+  });
+
+  setTimeout(function() {
+    if (!googleMapsLoaded) {
+      mapElement.style.transition = 'height 1s ease';
+      mapElement.style.height = '0';
+      const toast = document.createElement('div');
+      toast.id = 'snackbar';
+      toast.className = 'show';
+      if (navigator.onLine) {
+        toast.innerText = 'Failed to load map, please chek your connection';
+      } else {
+        toast.innerText = 'Failed to load map, you are offline';
+      }
+      mapElement.appendChild(toast);
+      setTimeout(() => {
+        toast.className = toast.className.replace('show', '');
+      }, 3000);
+    }
+  }, 4000);
 };
 
 /**
