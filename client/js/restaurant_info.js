@@ -1,4 +1,5 @@
 let restaurant;
+let reviewForm = document.querySelector('#review-form');
 var map;
 
 /**
@@ -19,6 +20,23 @@ window.initMap = () => {
     }
   });
 }
+
+reviewForm
+  .addEventListener('submit', event => {
+    event.preventDefault();
+    
+    const restaurantId = getParameterByName('id');
+    const data = {
+      rating: parseInt(document.querySelector('input[name="rating"]:checked').value),
+      name: document.querySelector('input[name="name"]').value,
+      comments: document.querySelector('textarea[name="comment"]').value,
+    }
+    
+    storeReview(restaurantId, data, (response) => {
+      console.log(response);
+      fetchRestaurantReviews(restaurantId);
+    });
+  });
 
 /**
  * Get current restaurant from page URL.
@@ -90,7 +108,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  DBHelper.fetchRestaurantReviews(restaurant.id, (err, result) => {
+  fetchRestaurantReviews(restaurant.id);
+}
+
+/**
+ * Fetch restaurant's reviews
+ */
+fetchRestaurantReviews = (id) => {
+  DBHelper.fetchRestaurantReviews(id, (err, result) => {
     if (err) {
       return console.log(err);
     }
@@ -124,11 +149,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
 
-  if (!reviews) {
+  document.querySelectorAll('#reviews-list li').forEach(item => {
+    item.remove()
+  });
+
+  if (reviews.length === 0) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
@@ -195,13 +221,28 @@ getParameterByName = (name, url) => {
 }
 
 /**
+ * Post a new review
+ */
+storeReview = (restaurant, review, callback) => {
+  review.restaurant_id = restaurant;
+
+  DBHelper.storeReview(review)
+    .then(response => {
+      callback(response);
+    })
+    .catch(response => {
+      callback(response);
+    });
+}
+
+/**
  * Set rating stars element
  */
 setRatingStars = rating => {
   let empty = 5 - rating;
   let stars = document.createElement('div');
 
-  stars.className = 'rating';
+  stars.className = 'star';
 
   for (let i = 0; i < rating; i++) {
     let star = document.createElement('span');

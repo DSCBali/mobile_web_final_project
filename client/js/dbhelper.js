@@ -28,11 +28,15 @@ class DBHelper {
       }
 
       if (!upgradeDB.objectStoreNames.contains(['reviews'])) {
-        const reviews = upgradeDB.createObjectStore('reviews', { keyPath: 'id', autoIncrement: true });
+        const reviews = upgradeDB.createObjectStore('reviews', { keyPath: 'id' });
 
         reviews.createIndex('restaurant_id', 'restaurant_id', {
           unique: false
         });
+      }
+
+      if (!upgradeDB.objectStoreNames.contains(['reviews_offline'])) {
+        upgradeDB.createObjectStore('reviews_offline', { autoIncrement: true });
       }
     });
   }
@@ -265,6 +269,68 @@ class DBHelper {
       animation: google.maps.Animation.DROP}
     );
     return marker;
+  }
+
+  /**
+   * Post a new review
+   */
+  static storeReview(review) {
+    return DBHelper.storeReviewToNetwork(review)
+      .then(() => {
+        let message = 'Successfully add a new review for this restaurant';
+
+        return {
+          status: 'OK',
+          type: 'NETWORK'
+        };
+      })
+      .catch(() => {
+        return DBHelper.storeReviewToDB(review)
+          .then(() => {
+            let message = 'Failed to post review to network. This review saved on your local browser. Please connect to a network to sync your data.';
+        
+            return {
+              status: 'OK',
+              type: 'LOCAL'
+            };
+          })
+          .catch(() => {
+            return {
+              status: 'FAILED',
+            };
+          });
+      });
+  }
+
+  /**
+   * Post a new review to network
+   */
+  static storeReviewToNetwork(review) {
+    return fetch('http://localhost:1337/reviews/', {
+      method: 'POST',
+      mode: "no-cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(review)
+    });
+  }
+
+   /**
+   * Post a new review to DB
+   */
+  static storeReviewToDB(review) {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews_offline', 'readwrite');
+        const store = trx.objectStore('reviews_offline');
+
+        store.put(review);
+
+        trx.complete;
+      });
   }
 
   /**

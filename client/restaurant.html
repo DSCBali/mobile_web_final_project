@@ -57,9 +57,61 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
-      <div>
-        <ul id="reviews-list"></ul>
+      <h2>Reviews</h2>
+
+      <div id="review-form-container">
+        <p>Leave your feedback.</p>
+        <form method="POST" id="review-form">
+          <div class="form-group">
+            <div class="rating">
+              <label>
+                <input type="radio" name="rating" value="1" required/>
+                <span class="icon">★</span>
+              </label>
+              <label>
+                <input type="radio" name="rating" value="2" />
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+              </label>
+              <label>
+                <input type="radio" name="rating" value="3" />
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>   
+              </label>
+              <label>
+                <input type="radio" name="rating" value="4" />
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+              </label>
+              <label>
+                <input type="radio" name="rating" value="5" />
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+                <span class="icon">★</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" required name="name" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Comment</label>
+            <textarea name="comment" required class="form-control" rows="4" placeholder="The food's tastes great..."></textarea> 
+          </div>
+
+          <button class="btn btn-primary">Submit</button>
+        </form>
       </div>
+
+      <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
   </main>

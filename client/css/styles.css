@@ -39,6 +39,64 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 header {
   background-color: #eee;
 }
+
+input, select, textarea {
+  box-sizing: border-box;
+} 
+
+textarea {
+  resize: vertical;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group > label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 6px 12px;
+  display: block;
+  line-height: 1.5;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+}
+
+.btn {
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  user-select: none;
+  border-radius: .25rem;
+  padding: 6px 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  border: solid 1px transparent;
+  cursor: pointer;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+.btn:focus, .btn:hover {
+  text-decoration: none;
+}
+
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -293,6 +351,11 @@ nav h1 a {
   letter-spacing: -1px;
   padding-bottom: 1pt;
 }
+
+#review-form-container {
+  margin-bottom: 15px;
+}
+
 #reviews-list {
   margin: 0;
   padding: 0;
@@ -315,7 +378,7 @@ nav h1 a {
   font-size: 12px;
   color: #999;
 }
-#reviews-list li .rating > span.active:before {
+#reviews-list li .star > span.active:before {
   content: "\2605";
   position: absolute;
   color: gold;
@@ -326,6 +389,72 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+.rating {
+  display: inline-block;
+  position: relative;
+  height: 35px;
+  line-height: 35px;
+  font-size: 35px;
+}
+
+.rating label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  cursor: pointer;
+}
+
+.rating label:last-child {
+  position: static;
+}
+
+.rating label:nth-child(1) {
+  z-index: 5;
+}
+
+.rating label:nth-child(2) {
+  z-index: 4;
+}
+
+.rating label:nth-child(3) {
+  z-index: 3;
+}
+
+.rating label:nth-child(4) {
+  z-index: 2;
+}
+
+.rating label:nth-child(5) {
+  z-index: 1;
+}
+
+.rating label input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.rating label .icon {
+  float: left;
+  color: transparent;
+}
+
+.rating label:last-child .icon {
+  color: #000;
+}
+
+.rating:not(:hover) label input:checked ~ .icon,
+.rating:hover label:hover input ~ .icon {
+  color: gold;
+}
+
+.rating label input:focus:not(:checked) ~ .icon:last-child {
+  color: #000;
+  text-shadow: 0 0 5px gold;
 }
 
 /* Mobile */
@@ -363,13 +492,17 @@ nav h1 a {
     width: calc(50% - 34px);
   }
 
+  #review-form-container {
+    width: 80%;
+  }
+
   #breadcrumb {
     padding-left: 15px;
     padding-right: 15px;
   }
 }
 
-/* Mobile */
+/* PC */
 @media only screen and (min-width: 960px) {
   .filter-options-wrapper {
     max-width: 1140px;
@@ -383,6 +516,10 @@ nav h1 a {
     width: 100%;
     margin-right: auto;
     margin-left: auto;
+  }
+
+  #review-form-container {
+    width: 40%;
   }
 
   #restaurants-list {

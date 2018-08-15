@@ -13,7 +13,7 @@ Nama: Eksa Pramindanata
 # Offline
 - [x] Setup service worker (workbox optional)
 - [ ] Setup IndexedDb
-- [ ] Save to DB for every get request
+- [x] Save to DB for every get request
 - [ ] Sync new reviews
 
 # Responsive
