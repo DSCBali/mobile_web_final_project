@@ -4,6 +4,7 @@
  * variabel idb is available.
  */
 
+// dekalrasi dbPromise
 const dbPromise = idb.open('restaurants-db', 1, function(upgradeDb) {
   upgradeDb.createObjectStore('restaurants');
   upgradeDb.createObjectStore('reviews');
@@ -19,6 +20,7 @@ class DBHelper {
     return `http://localhost:${port}/restaurants/`;
   }
 
+  // reviews url
   static get REVIEW_URL() {
     const port = 1337;
     return `http://localhost:${port}/reviews/`;
@@ -36,6 +38,7 @@ class DBHelper {
         return response.json();
       })
       .then(data => {
+        // menyimpan data ke idb jika berhasil
         dbPromise.then(db => {
           const tx = db.transaction('restaurants', 'readwrite');
           const keyValStore = tx.objectStore('restaurants');
@@ -45,6 +48,7 @@ class DBHelper {
         return callback(null, data);
       })
       .catch(err => {
+        // jika gagal coba baca ke idb
         dbPromise
           .then(db => {
             const tx = db.transaction('restaurants');
@@ -53,7 +57,8 @@ class DBHelper {
           })
           .then(val => callback(null, val))
           .catch(() => {
-            console.log('data tidak ada dalam db');
+            // jika tidak ada log error
+            console.error('No data in db');
           });
         return callback(err);
       });
@@ -218,6 +223,7 @@ class DBHelper {
     fetch(`${DBHelper.REVIEW_URL}?restaurant_id=${id}`)
       .then(res => res.json())
       .then(data => {
+        // menyimpan ke idb jika berhasil
         dbPromise.then(db => {
           const tx = db.transaction('reviews', 'readwrite');
           const keyValStore = tx.objectStore('reviews');
@@ -227,13 +233,16 @@ class DBHelper {
         return callback(data.reverse());
       })
       .catch(() =>
+        // jika gagal coba cek ke idb
         dbPromise
           .then(db => {
             const tx = db.transaction('reviews');
             const keyValStore = tx.objectStore('reviews');
             return keyValStore.get(id);
           })
+          // jika berhasil kirim data
           .then(val => callback(val.reverse()))
+          // jika tidak kirim sebuah pesan
           .catch(() => callback('Review does not exist'))
       );
   }
@@ -248,8 +257,10 @@ class DBHelper {
       const keyValStore = tx.objectStore('reviews');
       const needSync = await keyValStore.get('needs_sync');
       if (!needSync) {
+        // jika tidak ada data buat data menjadi array
         return keyValStore.put([data], 'needs_sync');
       } else {
+        // jika ada maka tambahkan data ke db
         return keyValStore.put(needSync.concat(data), 'needs_sync');
       }
     });
@@ -261,6 +272,7 @@ class DBHelper {
   static postReview() {
     dbPromise
       .then(async db => {
+        // membaca data dari idb kemudian menghapusnya
         const tx = db.transaction('reviews', 'readwrite');
         const keyValStore = tx.objectStore('reviews');
         const needSync = await keyValStore.get('needs_sync');
@@ -268,6 +280,7 @@ class DBHelper {
         return needSync;
       })
       .then(data => {
+        // melakukan fetch sebanyak data yang ada
         console.log(data);
         return Promise.all(
           data.map(val =>
@@ -283,6 +296,7 @@ class DBHelper {
           )
         );
       })
+      // jika error tampilkan pesan error
       .catch(err => console.error(err));
   }
 }

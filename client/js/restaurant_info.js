@@ -19,12 +19,14 @@ window.initMap = () => {
         scrollwheel: false
       });
 
+      // mengecek apakah maps berhasil di load
       google.maps.event.addListener(map, 'tilesloaded', function() {
         googleMapsLoaded = true;
         google.maps.event.clearListeners(map, 'tilesloaded');
         DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
       });
 
+      // jika tidak terload dalam 4s, anggap map gagal terload
       setTimeout(function() {
         if (!googleMapsLoaded) {
           mapElement.style.transition = 'height 1s ease';
@@ -67,6 +69,7 @@ fetchRestaurantFromURL = callback => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
+        callback(error, null);
         return;
       }
       fillRestaurantHTML();
@@ -96,6 +99,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
+  // implementasi webp dan srcset
   const picture = document.getElementById('restaurant-pic');
   const [imgSource] = DBHelper.imageUrlForRestaurant(restaurant).split('.');
 
@@ -167,6 +171,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
+  // mengecek apakah benar tidak ada review atau offline
   if (!reviews) {
     const noReviews = document.createElement('p');
     if (!navigator.onLine) {
@@ -249,6 +254,7 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
+// berjalan ketika melakukan submit form
 document.getElementById('reviewForm').addEventListener('submit', e => {
   e.preventDefault();
   const val = e.target;

@@ -20,6 +20,7 @@ self.addEventListener('install', event => {
   );
 });
 
+// menghapus cache yang lama
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches
@@ -38,6 +39,7 @@ self.addEventListener('activate', event => {
   );
 });
 
+// menympan img ke cache
 const servePhoto = request => {
   const storageUrl = request.url.replace(/\.(jpg|webp)$/, '');
   return caches.open(imgName).then(cache => {
@@ -51,19 +53,24 @@ const servePhoto = request => {
   });
 };
 
+// membaca setiap fetch yang terjadi
 self.addEventListener('fetch', event => {
   const reqUrl = new URL(event.request.url);
 
+  // berjalan ketika url di awali dengan /img/
   if (reqUrl.pathname.startsWith('/img/')) {
     event.respondWith(servePhoto(event.request));
     return;
   }
 
+  // berjalan ke req selain diawali oleh /img/
   event.respondWith(
     caches
       .match(event.request, { ignoreSearch: true })
       .then(response => {
         if (response) return response;
+
+        // berjalan ketika data yang dicari tidak ada di cache
         return fetch(event.request).catch(
           () =>
             new Response(
@@ -84,13 +91,22 @@ self.addEventListener('fetch', event => {
   );
 });
 
+// berjalan ketika sw melakukan sync event (pada saat online)
 self.addEventListener('sync', function(event) {
   console.log('syncing...', event.tag);
   console.log('syncing...', event);
   if (event.tag == 'syncReviews') {
-    if (typeof idb === 'undefined') importScripts('js/idb.js');
-    if (typeof DBHelper === 'undefined' || typeof dbPromise === 'undefined')
+    // imp idb jika tidak terdefinisi
+    if (typeof idb === 'undefined') {
+      importScripts('js/idb.js');
+    }
+
+    // imp DBHelper jika belum terdefinisi
+    if (typeof DBHelper === 'undefined' || typeof dbPromise === 'undefined') {
       importScripts('js/dbhelper.js');
+    }
+
+    // menunggu hingga postReview selesai
     event.waitUntil(DBHelper.postReview());
   }
 });

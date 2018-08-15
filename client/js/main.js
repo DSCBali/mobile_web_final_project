@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', event => {
   registerServiceWorker();
 });
 
+// func untuk registrasi sw
 const registerServiceWorker = () => {
   if (!navigator.serviceWorker) return;
 
@@ -149,6 +150,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
 
+  // mengecek apakah maps berhasil di load
   let googleMapsLoaded = false;
   const mapElement = document.getElementById('map');
   google.maps.event.addListener(map, 'tilesloaded', function() {
@@ -157,6 +159,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     addMarkersToMap();
   });
 
+  // jika tidak terload dalam 4s, anggap map gagal terload
   setTimeout(function() {
     if (!googleMapsLoaded) {
       mapElement.style.transition = 'height 1s ease';
@@ -183,6 +186,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
 
+  // mengimplement tasikan webp dan srcset
   const picture = document.createElement('picture');
   const [imgSource] = DBHelper.imageUrlForRestaurant(restaurant).split('.');
 
