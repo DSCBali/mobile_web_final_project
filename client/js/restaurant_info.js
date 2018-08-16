@@ -36,8 +36,19 @@ reviewForm
       comments: document.querySelector('textarea[name="comment"]').value,
     }
     
-    storeReview(restaurantId, data, (response) => {
-      console.log(response);
+    storeNewReview(restaurantId, data, (response) => {
+      if (response.status === 'OK') {
+        if (response.type === 'NETWORK') {
+          pushToast('success', 'Successfully add a new review for this restaurant.');
+        } else if (response.type === 'LOCAL') {
+          pushToast('warning', 'Your review saved locally, please connect to a network to sync your review.');
+        }
+
+        resetReviewForm();
+      } else {
+        pushToast('danger', 'Failed to post new review.');
+      }
+      
       fetchRestaurantReviews(restaurantId);
     });
   });
@@ -233,10 +244,16 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+resetReviewForm = () => {
+  document.querySelector('input[name="rating"]:checked').checked = false;
+  document.querySelector('input[name="name"]').value = '';
+  document.querySelector('textarea[name="comment"]').value = '';
+}
+
 /**
  * Post a new review
  */
-storeReview = (restaurant, review, callback) => {
+storeNewReview = (restaurant, review, callback) => {
   review.restaurant_id = restaurant;
 
   DBHelper.storeNewReview(review)

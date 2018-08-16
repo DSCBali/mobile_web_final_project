@@ -582,6 +582,42 @@
         "createdAt": "2018-08-15T08:04:58.777Z",
         "updatedAt": "2018-08-15T08:04:58.777Z",
         "id": 47
+      },
+      {
+        "rating": 4,
+        "name": "Eksa",
+        "comments": "enak ci",
+        "restaurant_id": "2",
+        "createdAt": "2018-08-16T09:27:36.810Z",
+        "updatedAt": "2018-08-16T09:27:36.810Z",
+        "id": 48
+      },
+      {
+        "rating": 1,
+        "name": "Eksa Pramindanata",
+        "comments": "awdaw",
+        "restaurant_id": "2",
+        "createdAt": "2018-08-16T09:36:17.139Z",
+        "updatedAt": "2018-08-16T09:36:17.139Z",
+        "id": 49
+      },
+      {
+        "rating": 1,
+        "name": "Joko",
+        "comments": "Gk enak",
+        "restaurant_id": "2",
+        "createdAt": "2018-08-16T09:56:07.815Z",
+        "updatedAt": "2018-08-16T09:56:07.815Z",
+        "id": 50
+      },
+      {
+        "rating": 4,
+        "name": "Uno",
+        "comments": "Hmmmmmmmmmmmmmmmmmm",
+        "restaurant_id": "1",
+        "createdAt": "2018-08-16T10:19:24.551Z",
+        "updatedAt": "2018-08-16T10:19:24.551Z",
+        "id": 51
       }
     ]
   },
@@ -637,7 +673,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 47
+      "id": 51
     }
   }
 }

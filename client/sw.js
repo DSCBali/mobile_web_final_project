@@ -11,26 +11,14 @@ self.addEventListener('install', event => {
         '/js/dbhelper.js',
         '/js/idb.js',
         '/js/main.js',
-        '/js/restaurant_info.js'
+        '/js/restaurant_info.js',
+        '/js/toast.js'
     ];
     const urlsCSS = [
         '/css/styles.css'
     ];
     const urlsImg = [
         '/img'
-    ];
-    const urlsApi = [
-        'http://localhost:1337/restaurants/',
-        'http://localhost:1337/reviews/?restaurant_id=1',
-        'http://localhost:1337/reviews/?restaurant_id=2',
-        'http://localhost:1337/reviews/?restaurant_id=3',
-        'http://localhost:1337/reviews/?restaurant_id=4',
-        'http://localhost:1337/reviews/?restaurant_id=5',
-        'http://localhost:1337/reviews/?restaurant_id=6',
-        'http://localhost:1337/reviews/?restaurant_id=7',
-        'http://localhost:1337/reviews/?restaurant_id=8',
-        'http://localhost:1337/reviews/?restaurant_id=9',
-        'http://localhost:1337/reviews/?restaurant_id=10',
     ];
     const urlsToCache = [
         ...urlsPage,

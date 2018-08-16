@@ -457,6 +457,90 @@ nav h1 a {
   text-shadow: 0 0 5px gold;
 }
 
+.toast-container {
+  bottom: 15px;
+  right: 15px;
+  position: fixed;
+  z-index: 10;
+}
+
+.toast {
+  margin-bottom: 15px;
+  background-color: transparent;
+  padding: 6px 12px;
+  border-radius: .25rem;
+  text-align: left;
+  width: 20em;    
+  animation: fadein 0.2s, fadeout 0.2s;
+  -moz-animation: fadein 0.2s, fadeout 0.2s;
+  /* Firefox */
+  -webkit-animation: fadein 0.2s, fadeout 0.2s;
+  /* Safari and Chrome */
+  -o-animation: fadein 0.2s, fadeout 0.2s;
+  /* Opera */
+}
+
+.toast.toast-danger {
+  background-color: #e74c3c;
+}
+
+.toast.toast-success {
+  background-color: #2ecc71;
+}
+
+.toast.toast-warning {
+  background-color: #f1c40f;
+}
+
+.toast p {
+  color: #fff;
+  font-weight: bold;
+}
+
+.toast.out {
+  display: none;
+}
+
+/* .toast.active {
+  opacity: 1;
+} */
+
+@keyframes fadein {
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}
+@-moz-keyframes fadein {
+  /* Firefox */
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}
+@-webkit-keyframes fadein {
+  /* Safari and Chrome */
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}
+@-o-keyframes fadein {
+  /* Opera */
+  from {
+    opacity:0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Mobile */
 @media only screen and (max-width: 600px) {
   .filter-options-wrapper {

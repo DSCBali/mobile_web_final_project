@@ -350,21 +350,17 @@ class DBHelper {
   /**
    * Post a new review
    */
-  static storeReview(review) {
-    return DBHelper.storeReviewToNetwork(review)
+  static storeNewReview(review) {
+    return DBHelper.storeNewReviewToNetwork(review)
       .then(() => {
-        let message = 'Successfully add a new review for this restaurant';
-
         return {
           status: 'OK',
           type: 'NETWORK'
         };
       })
       .catch(() => {
-        return DBHelper.storeReviewToDB(review)
+        return DBHelper.storeNewReviewToDB(review)
           .then(() => {
-            let message = 'Failed to post review to network. This review saved on your local browser. Please connect to a network to sync your data.';
-        
             return {
               status: 'OK',
               type: 'LOCAL'
@@ -381,7 +377,7 @@ class DBHelper {
   /**
    * Post a new review to network
    */
-  static storeReviewToNetwork(review) {
+  static storeNewReviewToNetwork(review) {
     return fetch('http://localhost:1337/reviews/', {
       method: 'POST',
       mode: "no-cors",
@@ -395,7 +391,7 @@ class DBHelper {
    /**
    * Post a new review to DB
    */
-  static storeReviewToDB(review) {
+  static storeNewReviewToDB(review) {
     return DBHelper.openDB()
       .then(db => {
         if (!db) return console.log('DB not found');
