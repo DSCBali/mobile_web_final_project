@@ -2,6 +2,26 @@ let restaurant;
 var map;
 
 /**
+ * init sw
+ */
+document.addEventListener('DOMContentLoaded', event => {
+  registerServiceWorker();
+});
+
+const registerServiceWorker = () => {
+  if (!navigator.serviceWorker) return;
+
+  navigator.serviceWorker
+    .register('sw.js')
+    .then(() => {
+      console.log('Service Worker Registration Success!');
+    })
+    .catch(() => {
+      console.log('Service Worker Registration Failed!');
+    });
+};
+
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
@@ -9,7 +29,6 @@ window.initMap = () => {
     if (error) {
       // Got an error!
       console.error(error);
-      window.location.href = '/404.html';
     } else {
       let googleMapsLoaded = false;
       const mapElement = document.getElementById('map');
@@ -63,7 +82,7 @@ fetchRestaurantFromURL = callback => {
   if (!id) {
     // no id found in URL
     error = 'No restaurant id in URL';
-    callback(error, null);
+    window.location.href = '/404';
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
@@ -173,7 +192,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   // mengecek apakah benar tidak ada review atau offline
   if (!reviews) {
-    const noReviews = document.createElement('p');
+    const noReviews = document.createElement('h3');
     if (!navigator.onLine) {
       noReviews.innerHTML = 'You are offline, go online to view reviews';
     } else {
@@ -259,7 +278,14 @@ document.getElementById('reviewForm').addEventListener('submit', e => {
   e.preventDefault();
   const val = e.target;
   if (val.rating.value === '') {
-    alert('Rating must be provided');
+    const toast = document.createElement('div');
+    toast.id = 'snackbar';
+    toast.className = 'show';
+    toast.innerText = 'Rating must be provided';
+    document.getElementById('reviewForm').appendChild(toast);
+    setTimeout(() => {
+      toast.className = toast.className.replace('show', '');
+    }, 3000);
     return;
   }
 

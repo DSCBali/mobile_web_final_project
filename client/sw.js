@@ -71,19 +71,32 @@ self.addEventListener('fetch', event => {
         if (response) return response;
 
         // berjalan ketika data yang dicari tidak ada di cache
-        return fetch(event.request).catch(
-          () =>
-            new Response(
-              `
-        <script type="application/javascript">
-          window.location.href = '/404?off=1';
-        </script>
-        `,
-              {
-                headers: { 'Content-Type': 'text/html' }
+        return fetch(event.request).catch(() => {
+          return new Response(
+            `
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <link rel="shortcut icon" sizes="76x76" type="image/x-icon" href="/favicon.ico">
+                <title>Offline</title>
+              </head>
+              <body style="color: #555555; margin: 40px; background-color: #bdbdbd">
+                <h1 id="head" style="text-align: center; font-size: 5em; color: #757575;">
+                  OFFLINE
+                </h1>
+                <h2 id="text" style="text-align: center; color: #777777;">
+                  You are offline, please check your connection
+                </h2>
+              </body>
+          `,
+            {
+              headers: {
+                'Content-Type': 'text/html'
               }
-            )
-        );
+            }
+          );
+        });
       })
       .catch(() => {
         console.log('FAILED ON CACHES');

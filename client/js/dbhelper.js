@@ -230,7 +230,7 @@ class DBHelper {
           keyValStore.put(data, id);
           return tx.complete;
         });
-        return callback(data.reverse());
+        return callback(data.sort((a, b) => a.id < b.id));
       })
       .catch(() =>
         // jika gagal coba cek ke idb
@@ -241,9 +241,8 @@ class DBHelper {
             return keyValStore.get(id);
           })
           // jika berhasil kirim data
-          .then(val => callback(val.reverse()))
-          // jika tidak kirim sebuah pesan
-          .catch(() => callback('Review does not exist'))
+          .then(val => callback(val.sort((a, b) => a.id < b.id)))
+          .catch(() => callback(null))
       );
   }
 
