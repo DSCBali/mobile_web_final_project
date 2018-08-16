@@ -78,7 +78,7 @@ self.addEventListener('fetch', event => {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <link rel="shortcut icon" sizes="76x76" type="image/x-icon" href="/favicon.ico">
+                <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
                 <title>Offline</title>
               </head>
               <body style="color: #555555; margin: 40px; background-color: #bdbdbd">

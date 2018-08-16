@@ -17,13 +17,13 @@ class DBHelper {
   static get DATABASE_URL() {
     // Change this to your server port
     const port = 1337;
-    return `http://localhost:${port}/restaurants/`;
+    return `http://192.168.1.64:${port}/restaurants/`;
   }
 
   // reviews url
   static get REVIEW_URL() {
     const port = 1337;
-    return `http://localhost:${port}/reviews/`;
+    return `http://192.168.1.64:${port}/reviews/`;
   }
 
   /**
