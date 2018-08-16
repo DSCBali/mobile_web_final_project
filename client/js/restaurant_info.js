@@ -8,7 +8,11 @@ var map;
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
-      console.error(error);
+      console.log(error);
+
+      if (error.hasOwnProperty('status') && error.status == 'NOT FOUND') {
+        window.location.href = '404';
+      } 
     } else {
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
@@ -51,15 +55,15 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
-      fillRestaurantHTML();
-      callback(null, restaurant)
-    });
+    DBHelper.fetchRestaurantById(id)
+      .then(restaurant => {
+        self.restaurant = restaurant;
+
+        fillRestaurantHTML();
+        callback(null, restaurant)
+      }, error => {
+        callback(error, null);
+      });
   }
 }
 

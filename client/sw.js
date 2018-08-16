@@ -4,16 +4,8 @@
 self.addEventListener('install', event => {
     const urlsPage = [
         '/',
-        '/restaurant?id=1',
-        '/restaurant?id=2',
-        '/restaurant?id=3',
-        '/restaurant?id=4',
-        '/restaurant?id=5',
-        '/restaurant?id=6',
-        '/restaurant?id=7',
-        '/restaurant?id=8',
-        '/restaurant?id=9',
-        '/restaurant?id=10',
+        '/restaurant?id=',
+        '/404',
     ];
     const urlsJS = [
         '/js/dbhelper.js',
