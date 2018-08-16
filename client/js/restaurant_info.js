@@ -183,7 +183,16 @@ createReviewHTML = (review) => {
 
 
   const date = document.createElement('div');
-  date.innerHTML = new Date(review.createdAt).toLocaleString('en-GB', { timeZone: "Asia/Makassar" });
+  
+  if (review.hasOwnProperty('createdAt')) {
+    date.innerHTML = new Date(review.createdAt).toLocaleString('en-GB', { timeZone: "Asia/Makassar" });
+  } else {
+    let em = document.createElement('em');
+    
+    em.innerHTML = 'Connect to network to sync this review.';
+    date.appendChild(em);
+  }
+
   date.className = 'timestamp';
   li.appendChild(date);
 
@@ -230,7 +239,7 @@ getParameterByName = (name, url) => {
 storeReview = (restaurant, review, callback) => {
   review.restaurant_id = restaurant;
 
-  DBHelper.storeReview(review)
+  DBHelper.storeNewReview(review)
     .then(response => {
       callback(response);
     })

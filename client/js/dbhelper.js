@@ -136,14 +136,33 @@ class DBHelper {
 
         callback(null, reviews);
       }, () => {
+        let result = [];
+
         return DBHelper.fetchRestaurantReviewsFromDB()
           .then(reviews => {
             reviews = reviews.filter(item => {
               return item.restaurant_id == id
             });
 
-            callback(null, reviews);
-          }, error => {
+            result = [
+              ...reviews
+            ];
+
+            return DBHelper.fetchUnSyncRestaurantReviewsFromDB()
+          })
+          .then(reviews => {
+            reviews = reviews.filter(item => {
+              return item.restaurant_id == id
+            });
+
+            result = [
+              ...reviews,
+              ...result
+            ];
+
+            callback(null, result);
+          })
+          .catch(error => {
             callback(error, null);
           });
       });
@@ -154,6 +173,40 @@ class DBHelper {
    */
   static fetchRestaurantReviewsFromNetwork(id) {
     return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`).then(response => response.json());
+  }
+
+  /**
+   * Fetch a restaurant reviews from DB
+   */
+  static fetchRestaurantReviewsFromDB() {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews', 'readonly');
+        const store = trx.objectStore('reviews');
+        
+        return store.getAll();
+      }, error => {
+        return error;
+      });
+  }
+
+  /**
+   * Fetch a unsynchronized restaurant reviews from DB
+   */
+  static fetchUnSyncRestaurantReviewsFromDB() {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews_offline', 'readonly');
+        const store = trx.objectStore('reviews_offline');
+        
+        return store.getAll();
+      }, error => {
+        return error;
+      });
   }
 
   /**
@@ -428,23 +481,6 @@ class DBHelper {
         const trx = db.transaction('restaurants', 'readonly');
         const store = trx.objectStore('restaurants');
 
-        return store.getAll();
-      }, error => {
-        return error;
-      });
-  }
-
-  /**
-   * Fetch a restaurant reviews from DB
-   */
-  static fetchRestaurantReviewsFromDB() {
-    return DBHelper.openDB()
-      .then(db => {
-        if (!db) return console.log('DB not found');
-
-        const trx = db.transaction('reviews', 'readonly');
-        const store = trx.objectStore('reviews');
-        
         return store.getAll();
       }, error => {
         return error;
