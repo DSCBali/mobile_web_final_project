@@ -663,6 +663,24 @@
         "createdAt": "2018-08-17T08:07:34.931Z",
         "updatedAt": "2018-08-17T08:07:34.931Z",
         "id": 1534492334881
+      },
+      {
+        "rating": 5,
+        "name": "Jokowi",
+        "comments": "Asyique",
+        "restaurant_id": 3,
+        "createdAt": "2018-08-17T08:17:02.440Z",
+        "updatedAt": "2018-08-17T08:17:02.440Z",
+        "id": 1534492334882
+      },
+      {
+        "rating": 5,
+        "name": "Eksa",
+        "comments": "Wow sedap",
+        "restaurant_id": 5,
+        "createdAt": "2018-08-17T08:19:41.509Z",
+        "updatedAt": "2018-08-17T08:19:41.509Z",
+        "id": 1534492334883
       }
     ]
   },
@@ -718,7 +736,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 1534492334881
+      "id": 1534492334883
     }
   }
 }

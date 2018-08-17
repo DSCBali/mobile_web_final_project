@@ -35,6 +35,9 @@ reviewForm
       name: document.querySelector('input[name="name"]').value,
       comments: document.querySelector('textarea[name="comment"]').value,
     }
+    let btnSubmit = document.querySelector('#btn-submit');
+
+    btnSubmit.setAttribute('disabled', true);
     
     storeNewReview(restaurantId, data, (response) => {
       if (response.status === 'OK') {
@@ -49,6 +52,7 @@ reviewForm
         pushToast('danger', 'Failed to post new review.');
       }
       
+      btnSubmit.removeAttribute('disabled');
       fetchRestaurantReviews(restaurantId);
     });
   });
@@ -315,6 +319,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .ready
     .then(swRegistration => {
-      return swRegistration.sync.register('syncReview');
+      return swRegistration.sync.register('reviews');
     });
 }

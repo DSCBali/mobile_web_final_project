@@ -225,6 +225,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .ready
     .then(swRegistration => {
-      return swRegistration.sync.register('syncReview');
+      return swRegistration.sync.register('reviews');
     });
 }

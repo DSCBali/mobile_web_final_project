@@ -66,7 +66,7 @@ self.addEventListener('sync', event => {
         importScripts('/js/dbhelper.js');
     } // Thanks for theese scripts mate
     
-    if (event.tag === 'syncReview') {
+    if (event.tag === 'reviews') {
         event.waitUntil(syncReview());
     }
 });
@@ -80,7 +80,7 @@ syncReview = () => {
             let length = reviews.length;
 
             if (length === 0) {
-                console.log('No reviews need to sync.');
+                console.log('No reviews need to be sync.');
 
                 return;
             }
