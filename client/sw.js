@@ -78,7 +78,7 @@ self.addEventListener('fetch', event => {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+                <link rel="shortcut icon" type="image/x-icon" href="icon/favicon.ico">
                 <title>Offline</title>
               </head>
               <body style="color: #555555; margin: 40px; background-color: #bdbdbd">
@@ -120,6 +120,38 @@ self.addEventListener('sync', function(event) {
     }
 
     // menunggu hingga postReview selesai
-    event.waitUntil(DBHelper.postReview());
+    event.waitUntil(
+      DBHelper.postReview().then(postInOff => {
+        if (Notification.permission === 'granted' && postInOff) {
+          self.registration.showNotification('Success', {
+            body: 'Your review has posted',
+            icon: 'icon/favicon.ico',
+            badge: 'icon/badge.png',
+            vibrate: [200, 100, 200]
+          });
+        }
+      })
+    );
   }
+});
+
+self.addEventListener('notificationclick', function(event) {
+  let url = 'http://localhost:5000/';
+  event.notification.close(); // Android needs explicit close.
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(windowClients => {
+      // Check if there is already a window/tab open with the target URL
+      for (let i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        // If so, just focus it.
+        if (client.url === url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // If not, then open the target URL in a new window/tab.
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
 });

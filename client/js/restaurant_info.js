@@ -1,5 +1,7 @@
 let restaurant;
 var map;
+var swFail = true;
+var registration;
 
 /**
  * init sw
@@ -13,7 +15,9 @@ const registerServiceWorker = () => {
 
   navigator.serviceWorker
     .register('sw.js')
-    .then(() => {
+    .then(registration => {
+      swFail = false;
+      registration = registration;
       console.log('Service Worker Registration Success!');
     })
     .catch(() => {
@@ -287,6 +291,26 @@ document.getElementById('reviewForm').addEventListener('submit', e => {
       toast.className = toast.className.replace('show', '');
     }, 3000);
     return;
+  } else if (val.name.value === '') {
+    const toast = document.createElement('div');
+    toast.id = 'snackbar';
+    toast.className = 'show';
+    toast.innerText = 'Name must be provided';
+    document.getElementById('reviewForm').appendChild(toast);
+    setTimeout(() => {
+      toast.className = toast.className.replace('show', '');
+    }, 3000);
+    return;
+  } else if (val.review.value === '') {
+    const toast = document.createElement('div');
+    toast.id = 'snackbar';
+    toast.className = 'show';
+    toast.innerText = 'Review must be provided';
+    document.getElementById('reviewForm').appendChild(toast);
+    setTimeout(() => {
+      toast.className = toast.className.replace('show', '');
+    }, 3000);
+    return;
   }
 
   const restaurant_id = getParameterByName('id');
@@ -297,31 +321,37 @@ document.getElementById('reviewForm').addEventListener('submit', e => {
     restaurant_id
   };
 
-  DBHelper.saveToDb(data)
-    .then(() => {
-      navigator.serviceWorker.ready.then(registration => {
-        registration.sync.register('syncReviews');
-      });
-      if (navigator.onLine) {
-        const reviewList = document.getElementById('reviews-list');
-        reviewList.insertBefore(
-          createReviewHTML({ ...data, createdAt: Date.now() }),
-          reviewList.firstChild
-        );
-      } else {
-        const toast = document.createElement('div');
-        toast.id = 'snackbar';
-        toast.className = 'show';
-        if (!navigator.onLine) {
-          toast.innerText = 'You are offline, we will post your review soon';
+  Notification.requestPermission().then(result => {
+    console.log(result);
+    DBHelper.saveToDb(data)
+      .then(() => {
+        navigator.serviceWorker.ready.then(registration => {
+          registration.sync.register('syncReviews');
+        });
+        if (navigator.onLine) {
+          const reviewList = document.getElementById('reviews-list');
+          reviewList.insertBefore(
+            createReviewHTML({ ...data, createdAt: Date.now() }),
+            reviewList.firstChild
+          );
+        } else {
+          const toast = document.createElement('div');
+          toast.id = 'snackbar';
+          toast.className = 'show';
+          if (!navigator.onLine) {
+            toast.innerText = 'You are offline, we will post your review soon';
+          }
+          document.getElementById('restaurant-form').appendChild(toast);
+          setTimeout(() => {
+            toast.className = toast.className.replace('show', '');
+          }, 3000);
         }
-        document.getElementById('restaurant-form').appendChild(toast);
-        setTimeout(() => {
-          toast.className = toast.className.replace('show', '');
-        }, 3000);
-      }
-    })
-    .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
+    if (swFail) {
+      DBHelper.postReview();
+    }
+  });
 
   val.name.value = '';
   val.rating.value = '';

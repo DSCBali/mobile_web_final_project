@@ -17,13 +17,13 @@ class DBHelper {
   static get DATABASE_URL() {
     // Change this to your server port
     const port = 1337;
-    return `http://192.168.1.64:${port}/restaurants/`;
+    return `http://localhost:${port}/restaurants/`;
   }
 
   // reviews url
   static get REVIEW_URL() {
     const port = 1337;
-    return `http://192.168.1.64:${port}/reviews/`;
+    return `http://localhost:${port}/reviews/`;
   }
 
   /**
@@ -254,6 +254,7 @@ class DBHelper {
     return dbPromise.then(async db => {
       const tx = db.transaction('reviews', 'readwrite');
       const keyValStore = tx.objectStore('reviews');
+      await keyValStore.put(!navigator.onLine, 'postInOff');
       const needSync = await keyValStore.get('needs_sync');
       if (!needSync) {
         // jika tidak ada data buat data menjadi array
@@ -269,33 +270,41 @@ class DBHelper {
    * post review from idb
    */
   static postReview() {
-    dbPromise
-      .then(async db => {
-        // membaca data dari idb kemudian menghapusnya
-        const tx = db.transaction('reviews', 'readwrite');
-        const keyValStore = tx.objectStore('reviews');
-        const needSync = await keyValStore.get('needs_sync');
-        keyValStore.delete('needs_sync');
-        return needSync;
-      })
-      .then(data => {
-        // melakukan fetch sebanyak data yang ada
-        console.log(data);
-        return Promise.all(
-          data.map(val =>
-            fetch(DBHelper.REVIEW_URL, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-              },
-              redirect: 'follow',
-              referrer: 'no-referrer',
-              body: JSON.stringify(val)
-            })
-          )
-        );
-      })
-      // jika error tampilkan pesan error
-      .catch(err => console.error(err));
+    return (
+      dbPromise
+        .then(async db => {
+          // membaca data dari idb kemudian menghapusnya
+          const tx = db.transaction('reviews', 'readwrite');
+          const keyValStore = tx.objectStore('reviews');
+          const needSync = await keyValStore.get('needs_sync');
+          keyValStore.delete('needs_sync');
+          return needSync;
+        })
+        .then(data => {
+          // melakukan fetch sebanyak data yang ada
+          console.log(data);
+          return Promise.all(
+            data.map(val =>
+              fetch(DBHelper.REVIEW_URL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json; charset=utf-8'
+                },
+                redirect: 'follow',
+                referrer: 'no-referrer',
+                body: JSON.stringify(val)
+              })
+            )
+          );
+        })
+        .then(() => dbPromise)
+        .then(db => {
+          const tx = db.transaction('reviews', 'readwrite');
+          const keyValStore = tx.objectStore('reviews');
+          return keyValStore.get('postInOff');
+        })
+        // jika error tampilkan pesan error
+        .catch(err => console.error(err))
+    );
   }
 }
