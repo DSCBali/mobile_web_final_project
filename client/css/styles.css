@@ -546,6 +546,18 @@ nav h1 a {
   }
 }
 
+/* 404 */
+body.page-404 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.page-404 .detail {
+  text-align: center;
+}
+
 /* Mobile */
 @media only screen and (max-width: 600px) {
   .filter-options-wrapper {
