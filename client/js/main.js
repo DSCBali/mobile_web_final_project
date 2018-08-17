@@ -221,4 +221,10 @@ if ('serviceWorker' in navigator) {
     }, err => {
       console.log('Failed to register Service Worker', err);
     });
+
+  navigator.serviceWorker
+    .ready
+    .then(swRegistration => {
+      return swRegistration.sync.register('syncReview');
+    });
 }

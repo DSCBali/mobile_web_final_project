@@ -4,7 +4,7 @@
 self.addEventListener('install', event => {
     const urlsPage = [
         '/',
-        '/restaurant?id=',
+        '/restaurant',
         '/404',
     ];
     const urlsJS = [
@@ -42,7 +42,7 @@ self.addEventListener('install', event => {
  */
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request)
+        caches.match(event.request, { ignoreSearch: true })
             .then(response => {
                 return response || fetch(event.request);
             })
@@ -51,3 +51,53 @@ self.addEventListener('fetch', event => {
             })
     );
 });
+
+/**
+ * Sync listener
+ */
+self.addEventListener('sync', event => {
+    console.log(`Sync[${event.tag}]`);
+
+    if (typeof idb === 'undefined') {
+        importScripts('/js/idb.js');
+    }
+  
+    if (typeof DBHelper === 'undefined' || typeof dbPromise === 'undefined') {
+        importScripts('/js/dbhelper.js');
+    } // Thanks for theese scripts mate
+    
+    if (event.tag === 'syncReview') {
+        event.waitUntil(syncReview());
+    }
+});
+
+/**
+ * Sync review
+ */
+syncReview = () => {
+    DBHelper.fetchRestaurantsLocalReviews()
+        .then(reviews => {
+            let length = reviews.length;
+
+            if (length === 0) {
+                console.log('No reviews need to sync.');
+
+                return;
+            }
+
+            reviews.forEach(review => {
+                let id = review.id;
+                delete review.id;
+
+                DBHelper.storeNewReviewToNetwork(review)
+                    .then(() => {
+                        return DBHelper.removeNewReviewFromDB(id);
+                    });
+            });
+
+            console.log('Successfully sync new reviews to network.');
+        })
+        .catch(error => {
+            console.log('Failed to check local reviews.', error);
+        });
+}

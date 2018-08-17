@@ -29,7 +29,7 @@ reviewForm
   .addEventListener('submit', event => {
     event.preventDefault();
     
-    const restaurantId = getParameterByName('id');
+    const restaurantId = parseInt(getParameterByName('id'));
     const data = {
       rating: parseInt(document.querySelector('input[name="rating"]:checked').value),
       name: document.querySelector('input[name="name"]').value,
@@ -164,15 +164,23 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
+  const list = document.querySelectorAll('#reviews-list li');
+  let noReviewsText = document.querySelector('#review-form-container > p'); 
 
-  document.querySelectorAll('#reviews-list li').forEach(item => {
-    item.remove()
-  });
+  if (list) {
+    list.forEach(item => {
+      item.remove()
+    });
+  } 
+
+  if (noReviewsText) {
+    noReviewsText.remove();
+  }
 
   if (reviews.length === 0) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
+    noReviewsText = document.createElement('p');
+    noReviewsText.innerHTML = 'No reviews yet!';
+    container.appendChild(noReviewsText);
     return;
   }
   const ul = document.getElementById('reviews-list');
@@ -302,5 +310,11 @@ if ('serviceWorker' in navigator) {
       console.log('Service Worker registered');
     }, err => {
       console.log('Failed to register Service Worker', err);
+    });
+
+  navigator.serviceWorker
+    .ready
+    .then(swRegistration => {
+      return swRegistration.sync.register('syncReview');
     });
 }

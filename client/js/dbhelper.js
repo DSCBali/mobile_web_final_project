@@ -36,7 +36,7 @@ class DBHelper {
       }
 
       if (!upgradeDB.objectStoreNames.contains(['reviews_offline'])) {
-        upgradeDB.createObjectStore('reviews_offline', { autoIncrement: true });
+        upgradeDB.createObjectStore('reviews_offline', { keyPath: 'id' });
       }
     });
   }
@@ -185,6 +185,23 @@ class DBHelper {
 
         const trx = db.transaction('reviews', 'readonly');
         const store = trx.objectStore('reviews');
+        
+        return store.getAll();
+      }, error => {
+        return error;
+      });
+  }
+
+  /**
+   * Fetch all restaurants local reviews from db 
+   */
+  static fetchRestaurantsLocalReviews() {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews_offline', 'readonly');
+        const store = trx.objectStore('reviews_offline');
         
         return store.getAll();
       }, error => {
@@ -399,8 +416,9 @@ class DBHelper {
         const trx = db.transaction('reviews_offline', 'readwrite');
         const store = trx.objectStore('reviews_offline');
 
-        store.put(review);
+        review.id = new Date().valueOf();
 
+        store.put(review);
         trx.complete;
       });
   }
@@ -478,6 +496,25 @@ class DBHelper {
         const store = trx.objectStore('restaurants');
 
         return store.getAll();
+      }, error => {
+        return error;
+      });
+  }
+
+  /**
+   * Remove a review from DB
+   */
+  static removeNewReviewFromDB(reviewId) {
+    return DBHelper.openDB()
+      .then(db => {
+        if (!db) return console.log('DB not found');
+
+        const trx = db.transaction('reviews_offline', 'readwrite');
+        const store = trx.objectStore('reviews_offline');
+
+        store.delete(reviewId);
+
+        return trx.complete;
       }, error => {
         return error;
       });

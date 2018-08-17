@@ -618,6 +618,51 @@
         "createdAt": "2018-08-16T10:19:24.551Z",
         "updatedAt": "2018-08-16T10:19:24.551Z",
         "id": 51
+      },
+      {
+        "rating": 4,
+        "name": "Eksa",
+        "comments": "awaw",
+        "restaurant_id": 4,
+        "createdAt": "2018-08-17T07:50:08.917Z",
+        "updatedAt": "2018-08-17T07:50:08.917Z",
+        "id": 52
+      },
+      {
+        "rating": 2,
+        "name": "Eksa Pramindanata",
+        "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quorum altera prosunt, nocent altera. Hunc vos beatum; Duo Reges: constructio interrete. Conferam tecum, quam cuique verso rem subicias; Qui autem esse poteris, nisi te amor ipse ceperit?",
+        "restaurant_id": 6,
+        "createdAt": "2018-08-17T08:02:58.036Z",
+        "updatedAt": "2018-08-17T08:02:58.036Z",
+        "id": 1534492334878
+      },
+      {
+        "rating": 4,
+        "name": "Snek",
+        "comments": "Hoc simile tandem est? Quae cum essent dicta, discessimus. Videsne, ut haec concinant? Duo Reges: constructio interrete. Negat esse eam, inquit, propter se expetendam.",
+        "restaurant_id": 6,
+        "createdAt": "2018-08-17T08:04:48.718Z",
+        "updatedAt": "2018-08-17T08:04:48.718Z",
+        "id": 1534492334879
+      },
+      {
+        "rating": 3,
+        "name": "Test",
+        "comments": "test",
+        "restaurant_id": 3,
+        "createdAt": "2018-08-17T08:06:09.358Z",
+        "updatedAt": "2018-08-17T08:06:09.358Z",
+        "id": 1534492334880
+      },
+      {
+        "rating": 5,
+        "name": "Lul",
+        "comments": "Hmmmm enak",
+        "restaurant_id": 7,
+        "createdAt": "2018-08-17T08:07:34.931Z",
+        "updatedAt": "2018-08-17T08:07:34.931Z",
+        "id": 1534492334881
       }
     ]
   },
@@ -673,7 +718,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 51
+      "id": 1534492334881
     }
   }
 }

@@ -1,4 +1,4 @@
-Nama: Eksa Pramindanata
+Name: Eksa Pramindanata
 
 - git clone
 - git checkout -b your_name
@@ -12,7 +12,7 @@ Nama: Eksa Pramindanata
 
 # Offline
 - [x] Setup service worker (workbox optional)
-- [ ] Setup IndexedDb
+- [x] Setup IndexedDb
 - [x] Save to DB for every get request
 - [ ] Sync new reviews
 
