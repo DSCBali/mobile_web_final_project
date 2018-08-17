@@ -53,18 +53,20 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    DBHelper.fetchRestaurantsFromNetwork()
+    DBHelper.fetchRestaurantsFromDB()
+      .then(restaurants => {
+        callback(null, restaurants);
+      })
+      .then(() => {
+        return DBHelper.fetchRestaurantsFromNetwork();
+      })
       .then(restaurants => {
         DBHelper.storeRestaurantsToDB(restaurants);
 
         callback(null, restaurants);
-      }, () => {
-        DBHelper.fetchRestaurantsFromDB()
-          .then(restaurants => {
-            callback(null, restaurants);
-          }, error => {
-            callback(error, null);
-          });
+      })
+      .catch(error => {
+        callback(error, null);
       });
   }
 
