@@ -1,8 +1,9 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines;
+let googleMapsLoaded = false;
+var map;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -75,11 +76,22 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
+
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: loc,
     scrollwheel: false
   });
+
+  /**
+   * listen to the tilesloaded event
+   * if that is triggered, google maps is loaded successfully for sure.
+   */
+  google.maps.event.addListener(map, 'tilesloaded', function() {
+    googleMapsLoaded = true;
+    google.maps.event.clearListeners(map, 'tilesloaded');
+  });
+
   updateRestaurants();
 }
 
@@ -209,6 +221,13 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+/* a delayed check to see if google maps was ever loaded */
+setTimeout(function() {
+  if (!googleMapsLoaded & !navigator.onLine) {
+    pushToast('danger', 'Failed to load google map.');
+  }    
+}, 5000);  
 
 /**
  * Register Service Worker

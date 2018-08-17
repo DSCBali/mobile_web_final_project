@@ -1,5 +1,6 @@
 let restaurant;
 let reviewForm = document.querySelector('#review-form');
+let googleMapsLoaded = false;
 var map;
 
 /**
@@ -19,6 +20,16 @@ window.initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
+
+      /**
+       * listen to the tilesloaded event
+       * if that is triggered, google maps is loaded successfully for sure.
+       */
+      google.maps.event.addListener(map, 'tilesloaded', function() {
+        googleMapsLoaded = true;
+        google.maps.event.clearListeners(map, 'tilesloaded');
+      });
+
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
@@ -303,6 +314,13 @@ setRatingStars = rating => {
 
   return stars;
 }
+
+/* a delayed check to see if google maps was ever loaded */
+setTimeout(function() {
+  if (!googleMapsLoaded & !navigator.onLine) {
+    pushToast('danger', 'Failed to load google map.');
+  }    
+}, 5000);  
 
 /**
  * Register Service Worker

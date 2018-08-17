@@ -14,7 +14,7 @@ Name: Eksa Pramindanata
 - [x] Setup service worker (workbox optional)
 - [x] Setup IndexedDb
 - [x] Save to DB for every get request
-- [ ] Sync new reviews
+- [x] Sync new reviews
 
 # Responsive
 - [x] Setup breakpoints
