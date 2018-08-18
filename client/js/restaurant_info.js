@@ -1,7 +1,6 @@
 let restaurant;
 var map;
 var swFail = true;
-var registration;
 
 /**
  * init sw
@@ -15,9 +14,8 @@ const registerServiceWorker = () => {
 
   navigator.serviceWorker
     .register('sw.js')
-    .then(registration => {
+    .then(() => {
       swFail = false;
-      registration = registration;
       console.log('Service Worker Registration Success!');
     })
     .catch(() => {
@@ -92,6 +90,9 @@ fetchRestaurantFromURL = callback => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
+        if (error === 'Restaurant does not exist') {
+          window.location.href = '/404';
+        }
         callback(error, null);
         return;
       }
@@ -188,7 +189,6 @@ fillRestaurantHoursHTML = (
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  console.log('jalan', reviews);
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -281,6 +281,7 @@ getParameterByName = (name, url) => {
 document.getElementById('reviewForm').addEventListener('submit', e => {
   e.preventDefault();
   const val = e.target;
+
   if (val.rating.value === '') {
     const toast = document.createElement('div');
     toast.id = 'snackbar';
@@ -321,8 +322,8 @@ document.getElementById('reviewForm').addEventListener('submit', e => {
     restaurant_id
   };
 
+  // meminta request untuk melakukan notifikasi
   Notification.requestPermission().then(result => {
-    console.log(result);
     DBHelper.saveToDb(data)
       .then(() => {
         navigator.serviceWorker.ready.then(registration => {
@@ -348,6 +349,8 @@ document.getElementById('reviewForm').addEventListener('submit', e => {
         }
       })
       .catch(err => console.error(err));
+
+    // berjalan ketika browser tidak support sw
     if (swFail) {
       DBHelper.postReview();
     }

@@ -1,12 +1,11 @@
 const allCache = ['restaurant-StaticV1', 'restaurant-ImgV1'];
-const [staticName, imgName, mapName] = allCache;
+const [staticName, imgName] = allCache;
 
 self.addEventListener('install', event => {
   const urlsToCache = [
     '/',
     '/css/styles.css',
-    '/restaurant/',
-    '/restaurant?id=',
+    '/restaurant',
     '/js/dbhelper.js',
     '/js/idb.js',
     '/js/main.js',
@@ -106,8 +105,6 @@ self.addEventListener('fetch', event => {
 
 // berjalan ketika sw melakukan sync event (pada saat online)
 self.addEventListener('sync', function(event) {
-  console.log('syncing...', event.tag);
-  console.log('syncing...', event);
   if (event.tag == 'syncReviews') {
     // imp idb jika tidak terdefinisi
     if (typeof idb === 'undefined') {
@@ -122,6 +119,8 @@ self.addEventListener('sync', function(event) {
     // menunggu hingga postReview selesai
     event.waitUntil(
       DBHelper.postReview().then(postInOff => {
+        // mengecek apakah dapat akses untuk notifikasi dan
+        // apakah review dibuat pada saat offline
         if (Notification.permission === 'granted' && postInOff) {
           self.registration.showNotification('Success', {
             body: 'Your review has posted',
@@ -135,20 +134,21 @@ self.addEventListener('sync', function(event) {
   }
 });
 
+// berjalan ketika natifikasi di click
 self.addEventListener('notificationclick', function(event) {
   let url = 'http://localhost:5000/';
-  event.notification.close(); // Android needs explicit close.
+  event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window' }).then(windowClients => {
-      // Check if there is already a window/tab open with the target URL
+      // mengecek apakah masih ada tab / window yang terbuka dengan url tersebut
       for (let i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
-        // If so, just focus it.
+        // jika ada buat window / tab tersebut menjadi focus
         if (client.url === url && 'focus' in client) {
           return client.focus();
         }
       }
-      // If not, then open the target URL in a new window/tab.
+      // jika tidak buka windows / tab baru.
       if (clients.openWindow) {
         return clients.openWindow(url);
       }

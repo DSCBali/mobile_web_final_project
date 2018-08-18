@@ -280,10 +280,9 @@ class DBHelper {
           keyValStore.delete('needs_sync');
           return needSync;
         })
-        .then(data => {
-          // melakukan fetch sebanyak data yang ada
-          console.log(data);
-          return Promise.all(
+        // melakukan fetch sebanyak data yang ada
+        .then(data =>
+          Promise.all(
             data.map(val =>
               fetch(DBHelper.REVIEW_URL, {
                 method: 'POST',
@@ -295,8 +294,8 @@ class DBHelper {
                 body: JSON.stringify(val)
               })
             )
-          );
-        })
+          )
+        )
         .then(() => dbPromise)
         .then(db => {
           const tx = db.transaction('reviews', 'readwrite');
