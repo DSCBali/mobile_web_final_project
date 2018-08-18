@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
   writeToIndexedDB();
+
+  if (!Notification) {
+    console.log('Notification not supported!');
+  }
 });
 
 /**
@@ -306,6 +310,8 @@ const createRestaurantHTML = (restaurant) => {
 
           DBHelper.insertUnsyncedAddToFavoriteAction(action);
 
+          Notification.requestPermission();
+
           if(navigator.serviceWorker.controller){
             navigator.serviceWorker.ready.then(function(reg) {
               if(reg.sync){
@@ -339,13 +345,13 @@ const createRestaurantHTML = (restaurant) => {
         method: 'PUT'
       })
       .then(function(response) {
-        console.log(response);
         if(response.type !== 'basic'){
           swal('Operation Succeed!', 'Restaurant successfully remove from favorite list!', 'success');
           //set back to default
           document.getElementById(`favBtn-${restaurant_id}`).className = 'restaurant-fav-btn';
           document.getElementById(`favBtn-${restaurant_id}`).setAttribute('is-favorite', 'false');
         }else{
+          console.log(response);
           const action = {
             'unsync_key': guid(),
             'restaurant_id': restaurant_id,
@@ -353,6 +359,8 @@ const createRestaurantHTML = (restaurant) => {
           };
 
           DBHelper.insertUnsyncedAddToFavoriteAction(action);
+
+          Notification.requestPermission();
 
           if(navigator.serviceWorker.controller){
             navigator.serviceWorker.ready.then(function(reg) {

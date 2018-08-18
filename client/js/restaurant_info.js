@@ -3,6 +3,9 @@ var map;
 
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchRestaurantFromURL();
+  if (!Notification) {
+    console.log('Notification not supported!');
+  }
 });
 
 window.initMap = () => {
@@ -312,6 +315,7 @@ if(reviewForm) {
 
       if(navigator.serviceWorker.controller){
         navigator.serviceWorker.ready.then(function(reg) {
+          Notification.requestPermission();
           if(reg.sync){
             reg.sync.register('syncReviews').then(function(event) {
               swal("You're Offline", "Dont worry! Your review will submitted immediately when you back online", "info");

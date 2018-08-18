@@ -179,6 +179,7 @@ const syncReviews = () => {
     }
  
     transaction.oncomplete = function(event) {
+      self.registration.showNotification('Your review successfully executed!');
       console.log('transaction success');
     };
  
@@ -226,13 +227,14 @@ const syncAddToFavoriteActions = () => {
         });
       });
     }
- 
+    
     const restaurantDeleteRequest = store.clear(); 
     restaurantDeleteRequest.onsuccess = function () {
       console.log('entry deleted');
     }
  
     transaction.oncomplete = function(event) {
+      self.registration.showNotification('Your action successfully executed!');
       console.log('transaction success');
     };
  
