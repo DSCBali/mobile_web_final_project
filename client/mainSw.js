@@ -181,6 +181,20 @@ const syncReviews = () => {
     transaction.oncomplete = function(event) {
       self.registration.showNotification('Your review successfully executed!');
       console.log('transaction success');
+      clients.matchAll({type: 'window'}).then(windowClients => {
+        // Check if there is already a window/tab open with the target URL
+        windowClients.map(windowClient => {
+          let client = windowClient;
+          // If so, just focus it.
+          if (client.url === DBHelper.DATABASE_URL && 'focus' in client) {
+            return client.focus();
+          }
+        });
+        // If not, then open the target URL in a new window/tab.
+        if (clients.openWindow) {
+          return clients.openWindow(DBHelper.DATABASE_URL);
+        }
+      });
     };
  
    }
@@ -236,6 +250,20 @@ const syncAddToFavoriteActions = () => {
     transaction.oncomplete = function(event) {
       self.registration.showNotification('Your action successfully executed!');
       console.log('transaction success');
+      clients.matchAll({type: 'window'}).then(windowClients => {
+        // Check if there is already a window/tab open with the target URL
+        windowClients.map(windowClient => {
+          let client = windowClient;
+          // If so, just focus it.
+          if (client.url === DBHelper.DATABASE_URL && 'focus' in client) {
+            return client.focus();
+          }
+        });
+        // If not, then open the target URL in a new window/tab.
+        if (clients.openWindow) {
+          return clients.openWindow(DBHelper.DATABASE_URL);
+        }
+      });
     };
  
    }
