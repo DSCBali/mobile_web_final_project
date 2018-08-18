@@ -64,7 +64,7 @@ self.addEventListener('sync', event => {
   
     if (typeof DBHelper === 'undefined' || typeof dbPromise === 'undefined') {
         importScripts('/js/dbhelper.js');
-    } // Thanks for theese scripts mate
+    }
     
     if (event.tag === 'reviews') {
         event.waitUntil(syncReview());
