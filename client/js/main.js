@@ -1,8 +1,9 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines;
+let googleMapsLoaded = false;
+var map;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -75,11 +76,22 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
+
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: loc,
     scrollwheel: false
   });
+
+  /**
+   * listen to the tilesloaded event
+   * if that is triggered, google maps is loaded successfully for sure.
+   */
+  google.maps.event.addListener(map, 'tilesloaded', function() {
+    googleMapsLoaded = true;
+    google.maps.event.clearListeners(map, 'tilesloaded');
+  });
+
   updateRestaurants();
 }
 
@@ -138,27 +150,60 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
-  const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  const divImgWrapper = document.createElement('div')
+  divImgWrapper.className = 'restaurant-img-wrapper';
+
+  const picture = document.createElement('picture');
+  picture.className = 'restaurant-img';
+  images = DBHelper.imageUrlForRestaurant(restaurant);
+
+  for (key in images) {
+    let source = document.createElement('source');
+    let srcset = '';
+    let length = images[key].length;
+
+    images[key].forEach((item, index) => {
+      srcset += item.url;
+      
+      if (item.width !== null) srcset += ` ${item.width}`;
+      if (index < length - 1) srcset += ', ';
+    });
+
+    if (key === 'webp') source.setAttribute('type', 'image/webp');
+    
+    source.setAttribute('srcset', srcset);
+    picture.appendChild(source);
+  }
+
+  const img = document.createElement('img');
+  img.src = `/img/${restaurant.photograph}.jpg`;
+  img.className = 'restaurant-img';
+  picture.appendChild(img);
+  
+  divImgWrapper.append(picture);
+
+  const divInfoWrapper = document.createElement('div')
+  divInfoWrapper.className = 'restaurant-info-wrapper';
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
-  li.append(name);
+  divInfoWrapper.append(name);
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  li.append(neighborhood);
+  divInfoWrapper.append(neighborhood);
 
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
-  li.append(address);
+  divInfoWrapper.append(address);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+  divInfoWrapper.append(more)
+
+  li.append(divImgWrapper);
+  li.append(divInfoWrapper);
 
   return li
 }
@@ -175,4 +220,30 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
+}
+
+/* a delayed check to see if google maps was ever loaded */
+setTimeout(function() {
+  if (!googleMapsLoaded & !navigator.onLine) {
+    pushToast('danger', 'Failed to load google map.');
+  }    
+}, 5000);  
+
+/**
+ * Register Service Worker
+ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('../sw.js')
+    .then(() => {
+      console.log('Service Worker registered');
+    }, err => {
+      console.log('Failed to register Service Worker', err);
+    });
+
+  navigator.serviceWorker
+    .ready
+    .then(swRegistration => {
+      return swRegistration.sync.register('reviews');
+    });
 }
